@@ -1,0 +1,112 @@
+package com.ssof.utils;
+
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
+public class StringUtils {
+	private static final String URL_START = "http";
+	private static final String TAG_START = "#";
+	private static final String AT_START = "@";
+	
+	private final static String [] templ = new String[0];
+	
+	static ArrayList <String> articles = new ArrayList<String>();
+	
+	static {
+		articles.add("del");
+		articles.add("degli");
+		articles.add("dello");
+		articles.add("della");
+		articles.add("delle");
+		articles.add("che");
+		articles.add("tra");
+		articles.add("fra");
+		articles.add("il");
+		articles.add("lo");
+		articles.add("la");
+		articles.add("gli");
+		articles.add("le");
+	}
+	
+	/**
+	 * Ritorna una stringa uguale a quella passata come parametro,
+	 * trasformando le lettere accentate in lettere non accentate.
+	 * @param str La stringa dalla quale eliminare gli accenti
+	 * @return La stringa senza accenti
+	 */
+	public static String removeAccents(String str) {
+        String nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(nfdNormalizedString).replaceAll(""); 
+	}
+	
+	/**
+	 * Ritorna le parole del tweet, utilizzando lo spazio come delimitatore.
+	 * Da utilizzare solo su tweet italiani, senza accenti, e senza articoli.
+	 */
+	public static String [] getTweetWords_spacedelim(String tweetText){
+		return tweetText.split(" ");
+	}
+	
+	/**
+	 * Ritorna un array contenente le parole del tweet, sia italiane che non, compresi gli articoli.
+	 * Elimina solo url e hashtag.
+	 */
+	public static String [] getTweetWords(String tweetText){
+		String [] words = removeAccents(tweetText).split("[^\\w[\\d]&&[^@]]+");
+		ArrayList <String> list = new ArrayList <String>();
+		
+		for(int i = 0 ; i < words.length ; i++){
+			if(!isUrlOrTag(words[i]))
+				list.add(words[i]);
+		}
+		
+		return list.toArray(templ);
+	}
+	
+	/**
+	 * Ritorna un array contenente le parole del tweet, sia italiane che non,
+	 * eliminando articoli, parole pi� corte di due caratteri, url e hashtag.
+	 */
+	public static String [] getTweetWordsNoArticles(String tweetText){
+		String [] words = tweetText.split("[^\\w[\\d]&&[^@]]+");
+		ArrayList <String> list = new ArrayList <String>();
+		
+		for(int i = 0 ; i < words.length ; i++){
+			if(!isArticle(words[i]) && !isUrlOrTag(words[i]) && words[i].length() > 2)
+				list.add(words[i]);
+		}
+		
+		return list.toArray(templ);
+	}
+	
+	/**
+	 * Ritorna un array contenente le parole del tweet, sia italiane che non,
+	 * eliminando articoli, parole pi� corte di due caratteri, url e hashtag.
+	 * Toglie gli accenti dalle parole.
+	 */
+	public static String [] getTweetWordsNoArticlesNoAccents(String tweetText){
+		String [] words = removeAccents(tweetText).split("[^\\w[\\d]&&[^@]]+");
+		ArrayList <String> list = new ArrayList <String>();
+		
+		for(int i = 0 ; i < words.length ; i++){
+			if(!isArticle(words[i]) && !isUrlOrTag(words[i]) && words[i].length() > 2)
+				list.add(words[i]);
+		}
+		
+		return list.toArray(templ);
+	}
+
+	private static boolean isArticle(String word) {
+		for(String article : articles)
+			if(article.equals(word))
+				return true;
+				
+		return false;
+	}
+
+	private static boolean isUrlOrTag(String string) {
+		return string.startsWith(AT_START) || string.startsWith(TAG_START) || string.startsWith(URL_START);
+	}
+}
