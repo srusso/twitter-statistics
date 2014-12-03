@@ -1,6 +1,7 @@
 package com.ssof.datatypes;
 
 import com.ssof.emotions.Dictionary;
+import com.ssof.utils.ArrayMath;
 
 /**
  * Contiene la media delle emozioni per un singolo giorno.

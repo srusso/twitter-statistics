@@ -1,12 +1,12 @@
 package com.ssof.tweetsearch;
 
+import com.ssof.exceptions.DateFormatException;
+import com.ssof.utils.DateUtils;
+import com.ssof.utils.StringUtils;
+
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.TreeSet;
-
-import ts.exceptions.DateFormatException;
-import ts.utils.DateUtils;
-import ts.utils.StringUtils;
 
 /**
  * Classe che rappresenta i parametri di ricerca da utilizzare per effettuare
@@ -82,7 +82,7 @@ public class SearchParameters {
 	 * @param sorgente Indica che i tweet ritornati dalla ricerca devono avere la sorgente specificata da questa stringa [case insensitive]
 	 * @throws DateFormatException 
 	 */
-	public SearchParameters(String oneormore, String all, String exact, String dopoData, String primaData, String autore, String localita, String sorgente) throws DateFormatException{
+	public SearchParameters(String oneormore, String all, String exact, String dopoData, String primaData, String autore, String localita, String sorgente) throws DateFormatException {
 		if(oneormore != null && oneormore.length() != 0){
 			String [] words = oneormore.split(" ");
 			oneOrMoreWords = new TreeSet<String>();

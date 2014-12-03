@@ -1,10 +1,10 @@
 package com.ssof.utils.comparators;
 
+import com.ssof.utils.WordCount;
+
 import java.util.Comparator;
 
-import ts.utils.WordCount;
-
-public class WordCountComparatorCount implements Comparator <WordCount>{
+public class WordCountComparatorCount implements Comparator<WordCount> {
 	public static final int ORDER_ASCENDING = 1;
 	public static final int ORDER_DESCENDING = -1;
 	

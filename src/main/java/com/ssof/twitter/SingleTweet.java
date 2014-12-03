@@ -1,9 +1,9 @@
 package com.ssof.twitter;
 
+import com.ssof.datatypes.TimePeriod;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import ts.datatypes.TimePeriod;
 
 public class SingleTweet {
 	public final long millisSinceEpoch;

@@ -1,7 +1,10 @@
 package com.ssof.datatypes;
 
 import com.ssof.emotions.Dictionary;
+import com.ssof.exceptions.NoSuchAttributeException;
+import com.ssof.exceptions.NoSuchDayException;
 import com.ssof.twitter.SingleTweet;
+import com.ssof.utils.comparators.DateComparator;
 
 import java.util.Calendar;
 import java.util.Collections;

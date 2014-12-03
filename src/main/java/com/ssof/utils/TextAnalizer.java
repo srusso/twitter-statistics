@@ -1,5 +1,7 @@
 package com.ssof.utils;
 
+import com.ssof.twitter.SingleTweet;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import ts.twitter.SingleTweet;
 
 public class TextAnalizer {
 	private static TextAnalizer ta = null;
@@ -75,9 +75,9 @@ public class TextAnalizer {
 		int size = tweets.size();
 		double ita = 0;
 		double tot = tweets.size();
-		
-		for(int i = 0 ; i < size ; i++){
-			if(isTextItalian(tweets.get(i).text)){
+
+		for (SingleTweet tweet : tweets) {
+			if (isTextItalian(tweet.text)) {
 				ita++;
 			}
 		}

@@ -1,5 +1,12 @@
 package com.ssof.gui;
 
+import com.ssof.emotions.ZScoreForGraph;
+import com.ssof.exceptions.NoSuchAttributeException;
+import com.ssof.exceptions.NoSuchDayException;
+import com.ssof.utils.comparators.DateComparator;
+
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -18,14 +25,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-import ts.emotions.ZScoreForGraph;
-import ts.exceptions.NoSuchAttributeException;
-import ts.exceptions.NoSuchDayException;
-import ts.utils.comparators.DateComparator;
 
 public class ZScoreGraphPanel extends JPanel implements MouseListener, MouseMotionListener, ComponentListener{
 
@@ -73,7 +72,7 @@ public class ZScoreGraphPanel extends JPanel implements MouseListener, MouseMoti
 		addMouseMotionListener(this);
 		addComponentListener(this);
 		
-		List<Calendar> dayList = new ArrayList <Calendar>();
+		List<Calendar> dayList = new ArrayList<>();
 		dayList.addAll(zscores.getValidDays());
 		Collections.sort(dayList, new DateComparator());
 		days = dayList.toArray(new Calendar[0]);
@@ -138,14 +137,11 @@ public class ZScoreGraphPanel extends JPanel implements MouseListener, MouseMoti
 			for(int j = 0 ; j < values.length ; j++){
 				try{
 					values[j] = zscores.getDayValue(days[j], selectedAttribute);
-				} catch(NoSuchDayException e){
-					System.out.println(e);
-					return;
-				} catch(NoSuchAttributeException e){
+				} catch(NoSuchDayException | NoSuchAttributeException e){
 					System.out.println(e);
 					return;
 				}
-				
+
 				if(values[j] >=0){
 					if(maxValue < values[j]){
 						maxValue = values[j];

@@ -1,11 +1,12 @@
 package com.ssof.emotions;
 
+import com.ssof.twitter.SingleTweet;
+import com.ssof.utils.WordCount;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import ts.twitter.SingleTweet;
-import ts.utils.WordCount;
 
 public class WordUsage {
 	/**
@@ -22,8 +23,8 @@ public class WordUsage {
 	 * Tali liste sono inoltre ordinate per numero di occorrenze.
 	 * @param tweets
 	 */
-	public WordUsage(Dictionary dictionary, List <SingleTweet> tweets){
-		map = new HashMap<String, TreeSet<WordCount>>();
+	public WordUsage(Dictionary dictionary, List<SingleTweet> tweets){
+		map = new HashMap<>();
 		getWordUsage(dictionary, tweets);
 	}
 	

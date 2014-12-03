@@ -1,11 +1,12 @@
 package com.ssof.datatypes;
 
+
+import com.ssof.twitter.SingleTweet;
+import com.ssof.utils.comparators.SingleTweetComparator;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
-
-import ts.twitter.SingleTweet;
-import ts.utils.comparators.SingleTweetComparator;
 
 /**
  * Classe che contiene una lista di tweet,
@@ -22,18 +23,18 @@ public class WordTimelineTweets{
 	/**
 	 * La lista di tweet.
 	 */
-	public final TreeSet <SingleTweet> tweets;
+	public final TreeSet<SingleTweet> tweets;
 	
 	/**
 	 * 
 	 * @param word La parola contenuta da tutti i tweet della lista passata come secondo argomento
 	 * @param tweets La lista di tweet
 	 */
-	public WordTimelineTweets(String word, List <SingleTweet> tweets){
+	public WordTimelineTweets(String word, List<SingleTweet> tweets){
 		this.word   = word;
 		this.tweets = new TreeSet<SingleTweet>(new SingleTweetComparator(SingleTweetComparator.ORDER_BY_DATE, SingleTweetComparator.ASCENDING));
 		
-		Iterator <SingleTweet> i = tweets.iterator();
+		Iterator<SingleTweet> i = tweets.iterator();
 		while(i.hasNext()){
 			this.tweets.add(i.next());
 		}

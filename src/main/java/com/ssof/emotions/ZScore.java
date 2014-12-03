@@ -1,15 +1,15 @@
 package com.ssof.emotions;
 
+import com.ssof.datatypes.TimePeriod;
+import com.ssof.exceptions.ZScoreException;
+import com.ssof.twitter.SingleTweet;
+
 import java.text.DecimalFormat;
 import java.util.Collection;
 
-import ts.datatypes.TimePeriod;
-import ts.exceptions.ZScoreException;
-import ts.twitter.SingleTweet;
-
 public class ZScore {
 	private Dictionary dictionary;
-	private Collection <SingleTweet> tweets;
+	private Collection<SingleTweet> tweets;
 	private TimePeriod timeInterval;
 	
 	/**
@@ -45,7 +45,7 @@ public class ZScore {
 	 */
 	long totalTweets;
 	
-	public ZScore(Dictionary d, Collection <SingleTweet> tweets, TimePeriod ti) throws ZScoreException{
+	public ZScore(Dictionary d, Collection <SingleTweet> tweets, TimePeriod ti) throws ZScoreException {
 		this.dictionary   = d;
 		this.tweets       = tweets;
 		this.timeInterval = ti;

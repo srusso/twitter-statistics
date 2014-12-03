@@ -1,18 +1,18 @@
 package com.ssof.emotions;
 
+import com.ssof.datatypes.TimePeriod;
+import com.ssof.twitter.SingleTweet;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import ts.datatypes.TimePeriod;
-import ts.exceptions.ZScoreException;
-import ts.twitter.SingleTweet;
 
 public class MultipleZScore {
 	private Dictionary dictionary;
-	private Collection <SingleTweet> tweets;
+	private Collection<SingleTweet> tweets;
 
 	private double [] M;
 	private double [] EM2;

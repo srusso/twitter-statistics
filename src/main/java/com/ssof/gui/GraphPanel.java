@@ -1,6 +1,10 @@
 package com.ssof.gui;
 
 
+import com.ssof.datatypes.TimePeriod;
+import com.ssof.datatypes.WordTimelineTweets;
+import com.ssof.twitter.SingleTweet;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -20,10 +24,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import ts.datatypes.TimePeriod;
-import ts.datatypes.WordTimelineTweets;
-import ts.twitter.SingleTweet;
-
 /**
  * Grafico uso parole.
  * @author Simone
@@ -41,7 +41,7 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
 	private static final Color axisColor = Color.BLACK;
 	private final Color [] lineColors;
 	
-	private final List <WordTimelineTweets> timelines;
+	private final List<WordTimelineTweets> timelines;
 	
 	/**
 	 * Periodo che va dal primo tweet all'ultimo tweet, precisamente.
@@ -251,10 +251,8 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
 		for(int i = 0 ; i < timelines.size() ; i++){
 
 			WordTimelineTweets tl = timelines.get(i);
-			Iterator <SingleTweet> j = tl.tweets.iterator(); 
-			while(j.hasNext()){
-				SingleTweet st = j.next();
-				timeSliceHits[i][(int) ((st.millisSinceEpoch - timePeriodDayStartInMillis) / timeSliceLength) ]++;
+			for (SingleTweet st : tl.tweets) {
+				timeSliceHits[i][(int) ((st.millisSinceEpoch - timePeriodDayStartInMillis) / timeSliceLength)]++;
 			}
 		
 		}
@@ -299,11 +297,12 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
 	
 	private int getMax(int[][] timeSliceHits) {
 		int max = timeSliceHits[0][0];
-		
-		for(int i = 0 ; i < timeSliceHits.length ; i++){
-			for(int j = 0 ; j < timeSliceHits[0].length ; j++){
-				if(max < timeSliceHits[i][j])
-					max = timeSliceHits[i][j];
+
+		for (final int[] timeSliceHit : timeSliceHits) {
+			for (int j = 0; j < timeSliceHits[0].length; j++) {
+				if (max < timeSliceHit[j]) {
+					max = timeSliceHit[j];
+				}
 			}
 		}
 		

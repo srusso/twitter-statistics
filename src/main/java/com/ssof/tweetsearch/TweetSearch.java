@@ -1,16 +1,15 @@
 package com.ssof.tweetsearch;
 
+import com.ssof.twitter.SingleTweet;
+import com.ssof.utils.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 
-import ts.twitter.SingleTweet;
-import ts.utils.StringUtils;
-
 public class TweetSearch {
-	private final List <SingleTweet> tweets;
+	private final List<SingleTweet> tweets;
 	
 	public TweetSearch(List <SingleTweet> tweets){
 		this.tweets = tweets;
@@ -22,14 +21,10 @@ public class TweetSearch {
 	 * @return Una lista di tweet
 	 */
 	public List <SingleTweet> getSearchResults(SearchParameters sp){
-		List <SingleTweet> res = new ArrayList<SingleTweet>();
+		List <SingleTweet> res = new ArrayList<>();
 
-		Iterator <SingleTweet> i = tweets.iterator();
-		
-		while(i.hasNext()){
-			SingleTweet tweet = i.next();
-			
-			if(satParameters(tweet, sp))
+		for (SingleTweet tweet : tweets) {
+			if (satParameters(tweet, sp))
 				res.add(tweet);
 		}
 		

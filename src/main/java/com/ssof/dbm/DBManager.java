@@ -11,9 +11,10 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
-import ts.twitter.SingleTweet;
-import ts.utils.StringUtils;
-import ts.utils.TextAnalizer;
+
+import com.ssof.twitter.SingleTweet;
+import com.ssof.utils.StringUtils;
+import com.ssof.utils.TextAnalizer;
 import twitter4j.GeoLocation;
 import twitter4j.Place;
 import twitter4j.Status;
@@ -42,7 +43,7 @@ public class DBManager {
 	 * @return true in caso di successo, false altrimenti
 	 */
 	public boolean addTweets(List<Status> tweetBuf){
-		String filename = new String(workingDirectory);
+		String filename = workingDirectory;
 		GregorianCalendar gc = new GregorianCalendar();
 		
 		if(filename.length() > 0)filename += File.separator;

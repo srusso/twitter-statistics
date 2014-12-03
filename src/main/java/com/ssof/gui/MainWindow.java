@@ -1,5 +1,46 @@
 package com.ssof.gui;
 
+import com.ssof.datatypes.MoodData;
+import com.ssof.datatypes.TimePeriod;
+import com.ssof.datatypes.WordTimelineTweets;
+import com.ssof.dbm.DBManager;
+import com.ssof.emotions.Dictionary;
+import com.ssof.emotions.ExpansionParameters;
+import com.ssof.emotions.LoadDictionary;
+import com.ssof.emotions.MultipleZScore;
+import com.ssof.emotions.SingleZScore;
+import com.ssof.emotions.WordUsage;
+import com.ssof.emotions.ZScore;
+import com.ssof.emotions.ZScoreForGraph;
+import com.ssof.exceptions.DateFormatException;
+import com.ssof.exceptions.DictionaryException;
+import com.ssof.exceptions.DictionaryFileFormatException;
+import com.ssof.exceptions.WrongAttributeValueException;
+import com.ssof.exceptions.WrongNumberOfValuesException;
+import com.ssof.exceptions.ZScoreException;
+import com.ssof.tweetsearch.SearchParameters;
+import com.ssof.tweetsearch.TweetSearch;
+import com.ssof.twitter.SingleTweet;
+import com.ssof.twitter.TweetManager;
+import com.ssof.utils.ArrayMath;
+import com.ssof.utils.DateUtils;
+import com.ssof.utils.TextAnalizer;
+import twitter4j.TwitterException;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
+import javax.swing.border.TitledBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -20,50 +61,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
-import javax.swing.border.TitledBorder;
-
-import ts.datatypes.MoodData;
-import ts.datatypes.TimePeriod;
-import ts.datatypes.WordTimelineTweets;
-import ts.dbm.DBManager;
-import ts.emotions.Dictionary;
-import ts.emotions.ExpansionParameters;
-import ts.emotions.LoadDictionary;
-import ts.emotions.MultipleZScore;
-import ts.emotions.SingleZScore;
-import ts.emotions.WordUsage;
-import ts.emotions.ZScore;
-import ts.emotions.ZScoreForGraph;
-import ts.exceptions.DateFormatException;
-import ts.exceptions.DictionaryException;
-import ts.exceptions.DictionaryFileFormatException;
-import ts.exceptions.WrongAttributeValueException;
-import ts.exceptions.WrongNumberOfValuesException;
-import ts.exceptions.ZScoreException;
-import ts.tweetsearch.SearchParameters;
-import ts.tweetsearch.TweetSearch;
-import ts.twitter.SingleTweet;
-import ts.twitter.TweetManager;
-import ts.utils.ArrayMath;
-import ts.utils.DateUtils;
-import ts.utils.TextAnalizer;
-import twitter4j.TwitterException;
 
 public class MainWindow extends JFrame implements MouseListener, ActionListener, WindowListener{
 	private static final long serialVersionUID = -6210415924364979887L;
@@ -97,7 +95,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 	private TweetManager tweetManager;
 	
 	
-	private List <SingleTweet> tweets = null;
+	private List<SingleTweet> tweets = null;
 	
 	private Dictionary dictionary = null;
 	
@@ -443,18 +441,10 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 					d2 = LoadDictionary.loadDictionary(files[1]);
 					outputPanel.setText(d1.diff(d2).toString());
 				}
-			} catch (WrongNumberOfValuesException e) {
-				outputPanel.setText(e.toString());
-			} catch (WrongAttributeValueException e) {
-				outputPanel.setText(e.toString());
-			} catch (IOException e) {
-				outputPanel.setText(e.toString());
-			} catch (DictionaryFileFormatException e) {
-				outputPanel.setText(e.toString());
-			} catch (DictionaryException e) {
+			} catch (WrongNumberOfValuesException | IOException | WrongAttributeValueException | DictionaryFileFormatException | DictionaryException e) {
 				outputPanel.setText(e.toString());
 			}
-			
+
 		}
 	}
 	
@@ -466,15 +456,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 			
 			try {
 				dictionary = LoadDictionary.loadDictionary((wordlistFileChooser.getSelectedFile()));
-			} catch (WrongNumberOfValuesException e) {
-				outputPanel.setText(e.toString());
-			} catch (WrongAttributeValueException e) {
-				outputPanel.setText(e.toString());
-			} catch (IOException e) {
-				outputPanel.setText(e.toString());
-			} catch (DictionaryFileFormatException e) {
-				outputPanel.setText(e.toString());
-			} catch (DictionaryException e) {
+			} catch (Exception e) {
 				outputPanel.setText(e.toString());
 			}
 			
@@ -527,17 +509,19 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		long time1 = System.currentTimeMillis();
 		SearchParameters spms;
 		TweetSearch ts = new TweetSearch(tweets);
-		List <WordTimelineTweets> timelines = new ArrayList <WordTimelineTweets>();
-		
-		for(int i = 0 ; i < words.length ; i++){ //per ogni parola inserita dall'utente
+		List <WordTimelineTweets> timelines = new ArrayList<WordTimelineTweets>();
+
+		for (final String word : words) { //per ogni parola inserita dall'utente
 			try {
-				spms = new SearchParameters(words[i], null, null, null, null, null, null, null); //creo dei parametri di ricerca che restituiscono i tweet contenenti tale parola
+				spms = new SearchParameters(word, null, null, null, null, null, null, null); //creo dei parametri di ricerca che
+				// restituiscono i tweet contenenti tale parola
 			} catch (DateFormatException e) {
-				JOptionPane.showMessageDialog(this, "Dovrebbe essere impossibile vedere questo messaggio", "Errore impossibile!", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Dovrebbe essere impossibile vedere questo messaggio", "Errore " +
+					"impossibile!", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			//aggiungo la timeline con i tweet che contengono tale parola
-			timelines.add(new WordTimelineTweets(words[i], ts.getSearchResults(spms)));
+			timelines.add(new WordTimelineTweets(word, ts.getSearchResults(spms)));
 		}
 		
 		//infine mostro il grafico
@@ -581,9 +565,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		long t3 = System.currentTimeMillis();
 		try {
 			dictionary.expand(ep).saveToFile(file.getAbsolutePath());
-		} catch (DictionaryException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (DictionaryException | IOException e) {
 			e.printStackTrace();
 		}
 		long t4 = System.currentTimeMillis();
@@ -874,7 +856,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		}
 		
 		String x;
-		double perturb = -1;
+		double perturb;
 		
 		do{
 			x = JOptionPane.showInputDialog(null, "Valore perturbazione [0, 1]: ");
@@ -885,7 +867,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 				e.printStackTrace();
 				return;
 			}
-		} while(x != null && perturb < 0);
+		} while(perturb < 0);
 		
 		
 		Dictionary newDic = dictionary.addPerturbation(perturb);
@@ -972,19 +954,17 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		
 		outputPanel.setText("");
 		outputPanel.append("Risultati ricerca:\n");
-		Iterator <SingleTweet> i = results.iterator();
-		while(i.hasNext()){
-			SingleTweet t = i.next();
+		for (SingleTweet t : results) {
 			outputPanel.append("Utente: " + t.user + "\n");
 			outputPanel.append("Localita: " + t.place + "\n");
 			outputPanel.append("Sorgente: " + t.source + "\n");
 			outputPanel.append("Tweet: " + t.text + "\n");
-			if(ta != null){
+			if (ta != null) {
 				boolean ita = ta.isTextItalian(t.text);
-				if(ita){
+				if (ita) {
 					outputPanel.append("Tweet italiano.\n");
-					if(dictionary != null)
-						outputPanel.append("Umore tweet: " + dictionary.getTweetMoodAsString(t.text) +"\n\n");
+					if (dictionary != null)
+						outputPanel.append("Umore tweet: " + dictionary.getTweetMoodAsString(t.text) + "\n\n");
 					else outputPanel.append("\n");
 				} else {
 					outputPanel.append("Tweet in lingua straniera.\n\n");

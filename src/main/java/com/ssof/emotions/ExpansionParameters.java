@@ -1,6 +1,7 @@
 package com.ssof.emotions;
 
-import ts.exceptions.WrongExpansionParametersException;
+
+import com.ssof.exceptions.WrongExpansionParametersException;
 
 /**
  * Parametri di espansione di un lessico.

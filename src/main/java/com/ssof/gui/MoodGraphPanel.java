@@ -1,5 +1,10 @@
 package com.ssof.gui;
 
+import com.ssof.datatypes.MoodData;
+import com.ssof.exceptions.NoSuchAttributeException;
+import com.ssof.exceptions.NoSuchDayException;
+import com.ssof.utils.comparators.DateComparator;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -21,11 +26,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import ts.datatypes.MoodData;
-import ts.exceptions.NoSuchAttributeException;
-import ts.exceptions.NoSuchDayException;
-import ts.utils.comparators.DateComparator;
 
 /**
  * Grafico che mostra il grafico dell'andamento delle varie emozioni nel tempo.
@@ -57,7 +57,7 @@ public class MoodGraphPanel extends JPanel implements MouseListener, MouseMotion
 	public MoodGraphPanel(MoodData mdata) {
 		this.mdata = mdata;
 		
-		lineColors = new ArrayList<Color>();
+		lineColors = new ArrayList<>();
 		lineColors.add(Color.RED);
 		lineColors.add(Color.BLUE);
 		lineColors.add(Color.CYAN);
@@ -80,10 +80,10 @@ public class MoodGraphPanel extends JPanel implements MouseListener, MouseMotion
 		addMouseMotionListener(this);
 		addComponentListener(this);
 		
-		List<Calendar> dayList = new ArrayList <Calendar>();
+		List<Calendar> dayList = new ArrayList <>();
 		dayList.addAll(mdata.getValidDays());
 		Collections.sort(dayList, new DateComparator());
-		days = dayList.toArray(new Calendar[0]);
+		days = dayList.toArray(new Calendar[dayList.size()]);
 		
 		selectedAttributes = null;
 		
@@ -153,43 +153,40 @@ public class MoodGraphPanel extends JPanel implements MouseListener, MouseMotion
 		}	
 		
 		double max_y_draw = 0;
-		for(int s = 0 ; s < selectedAttributes.length ; s++){
-			String selectedAttribute = selectedAttributes[s];
-			
+		for (String selectedAttribute : selectedAttributes) {
 			//passo al calcolo dei valori da disegnare
-			double [] values = new double[days.length];
+			double[] values = new double[days.length];
 			double maxValue = 0; //valore massimo sull'asse delle ordinate
 
 			//prendo i valori da disegnare sull'asse delle ordinate (cioe' la media dell'attributo selezionato per ogni giorno)
-			for(int j = 0 ; j < values.length ; j++){
-				try{
+			for (int j = 0; j < values.length; j++) {
+				try {
 					values[j] = mdata.getDayMean(days[j], selectedAttribute);
-				} catch(NoSuchDayException e){
-					System.out.println(e);
-					return;
-				} catch(NoSuchAttributeException e){
+				} catch (NoSuchDayException | NoSuchAttributeException e) {
 					System.out.println(e);
 					return;
 				}
 
-				if(maxValue < values[j]){
+				if (maxValue < values[j]) {
 					maxValue = values[j];
-					if(maxValue > max_y_draw)
+					if (maxValue > max_y_draw)
 						max_y_draw = maxValue;
 				}
 			}
 
 			//finalmente, disegno il grafico
-			try{
+			try {
 				g2.setColor(lineColors.get(mdata.getAttributePosition(selectedAttribute)));
-			} catch(RuntimeException e){
-				JOptionPane.showMessageDialog(null, "Impossibile mostrare grafico di \'" + selectedAttribute + "\'.", "Errore interno", JOptionPane.ERROR_MESSAGE);
+			} catch (RuntimeException e) {
+				JOptionPane.showMessageDialog(null, "Impossibile mostrare grafico di \'" + selectedAttribute + "\'.", "Errore " +
+					"interno", JOptionPane.ERROR_MESSAGE);
 			}
-			
-			for(int j = 1 ; j < values.length ; j++){
-				int h1 = (int) (values[j-1]*(originy-endy)/maxValue);
-				int h2 = (int) (values[j]*(originy-endy)/maxValue);
-				g2.drawLine(startTimex + (j-1) * dayLineDist + dayLineDist/2, originy - h1, startTimex + j * dayLineDist + dayLineDist/2, originy - h2);
+
+			for (int j = 1; j < values.length; j++) {
+				int h1 = (int) (values[j - 1] * (originy - endy) / maxValue);
+				int h2 = (int) (values[j] * (originy - endy) / maxValue);
+				g2.drawLine(startTimex + (j - 1) * dayLineDist + dayLineDist / 2, originy - h1, startTimex + j * dayLineDist + 
+					dayLineDist / 2, originy - h2);
 			}
 		}
 		
@@ -213,7 +210,7 @@ public class MoodGraphPanel extends JPanel implements MouseListener, MouseMotion
 		
 		g2.setColor(axisColor);
 		//disegno la data vicino al puntatore del mouse
-		if(startTimex > originx || mouseX < endx){
+		if(mouseX < endx){
 			int dayLenPx = (endx - originx) / days.length;
 			int d = (mouseX - originx) / dayLenPx;
 		

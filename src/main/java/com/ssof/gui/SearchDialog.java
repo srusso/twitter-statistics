@@ -10,13 +10,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
+import com.ssof.exceptions.DateFormatException;
+import com.ssof.tweetsearch.SearchParameters;
+import com.ssof.tweetsearch.TweetSearch;
+import com.ssof.twitter.SingleTweet;
+
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import ts.exceptions.DateFormatException;
-import ts.tweetsearch.SearchParameters;
-import ts.tweetsearch.TweetSearch;
-import ts.twitter.SingleTweet;
 import java.awt.Choice;
 import java.util.Collection;
 import java.util.Iterator;
@@ -35,7 +36,7 @@ public class SearchDialog extends JFrame implements MouseListener{
 	
 	
 	private final MainWindow parent;
-	private final List <SingleTweet> tweets;
+	private final List<SingleTweet> tweets;
 
 	private static final long serialVersionUID = 7783611043919914891L;
 	private JPanel contentPane;

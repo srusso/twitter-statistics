@@ -1,9 +1,10 @@
 package com.ssof.emotions;
 
+import com.ssof.exceptions.DictionaryException;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import ts.exceptions.DictionaryException;
 
 public class DictionaryComparison {
 	/**

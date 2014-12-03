@@ -9,9 +9,7 @@ public class StringUtils {
 	private static final String TAG_START = "#";
 	private static final String AT_START = "@";
 	
-	private final static String [] templ = new String[0];
-	
-	static ArrayList <String> articles = new ArrayList<String>();
+	static ArrayList <String> articles = new ArrayList<>();
 	
 	static {
 		articles.add("del");
@@ -55,14 +53,14 @@ public class StringUtils {
 	 */
 	public static String [] getTweetWords(String tweetText){
 		String [] words = removeAccents(tweetText).split("[^\\w[\\d]&&[^@]]+");
-		ArrayList <String> list = new ArrayList <String>();
-		
-		for(int i = 0 ; i < words.length ; i++){
-			if(!isUrlOrTag(words[i]))
-				list.add(words[i]);
+		ArrayList <String> list = new ArrayList <>();
+
+		for (final String word : words) {
+			if (!isUrlOrTag(word))
+				list.add(word);
 		}
 		
-		return list.toArray(templ);
+		return list.toArray(new String[list.size()]);
 	}
 	
 	/**
@@ -72,13 +70,13 @@ public class StringUtils {
 	public static String [] getTweetWordsNoArticles(String tweetText){
 		String [] words = tweetText.split("[^\\w[\\d]&&[^@]]+");
 		ArrayList <String> list = new ArrayList <String>();
-		
-		for(int i = 0 ; i < words.length ; i++){
-			if(!isArticle(words[i]) && !isUrlOrTag(words[i]) && words[i].length() > 2)
-				list.add(words[i]);
+
+		for (final String word : words) {
+			if (!isArticle(word) && !isUrlOrTag(word) && word.length() > 2)
+				list.add(word);
 		}
 		
-		return list.toArray(templ);
+		return list.toArray(new String[list.size()]);
 	}
 	
 	/**
@@ -89,13 +87,13 @@ public class StringUtils {
 	public static String [] getTweetWordsNoArticlesNoAccents(String tweetText){
 		String [] words = removeAccents(tweetText).split("[^\\w[\\d]&&[^@]]+");
 		ArrayList <String> list = new ArrayList <String>();
-		
-		for(int i = 0 ; i < words.length ; i++){
-			if(!isArticle(words[i]) && !isUrlOrTag(words[i]) && words[i].length() > 2)
-				list.add(words[i]);
+
+		for (final String word : words) {
+			if (!isArticle(word) && !isUrlOrTag(word) && word.length() > 2)
+				list.add(word);
 		}
 		
-		return list.toArray(templ);
+		return list.toArray(new String[list.size()]);
 	}
 
 	private static boolean isArticle(String word) {

@@ -1,5 +1,7 @@
 package com.ssof.gui;
 
+import com.ssof.emotions.ZScoreForGraph;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -10,8 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
-
-import ts.emotions.ZScoreForGraph;
 
 public class ZScoreGraphFrame extends JFrame implements ItemListener{
 

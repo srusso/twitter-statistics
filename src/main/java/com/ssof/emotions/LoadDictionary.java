@@ -1,5 +1,10 @@
 package com.ssof.emotions;
 
+import com.ssof.exceptions.DictionaryException;
+import com.ssof.exceptions.DictionaryFileFormatException;
+import com.ssof.exceptions.WrongAttributeValueException;
+import com.ssof.exceptions.WrongNumberOfValuesException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -7,10 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ts.exceptions.DictionaryException;
-import ts.exceptions.DictionaryFileFormatException;
-import ts.exceptions.WrongAttributeValueException;
-import ts.exceptions.WrongNumberOfValuesException;
 
 /**
  * Classe che serve per leggere un file contenente una lista di parole
@@ -47,7 +48,7 @@ public class LoadDictionary {
 	 * @throws DictionaryFileFormatException Se c'e' qualche errore nel formato del file
 	 * @throws DictionaryException Se c'e' un errore nella creazione del dizionario
 	 */
-	public static Dictionary loadDictionary(String filename) throws WrongNumberOfValuesException, WrongAttributeValueException, IOException, DictionaryFileFormatException, DictionaryException{
+	public static Dictionary loadDictionary(String filename) throws WrongNumberOfValuesException, WrongAttributeValueException, IOException, DictionaryFileFormatException, DictionaryException, DictionaryException {
 		FileReader inFile = new FileReader(filename);
 		BufferedReader in = new BufferedReader(inFile);
 		int currentLine, state;

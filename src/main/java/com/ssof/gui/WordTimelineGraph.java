@@ -1,11 +1,11 @@
 package com.ssof.gui;
 
-import java.util.List;
+import com.ssof.datatypes.WordTimelineTweets;
+
 import javax.swing.JFrame;
 
-import ts.datatypes.WordTimelineTweets;
-
 import javax.swing.border.EmptyBorder;
+import java.util.List;
 
 /**
  * JFrame che mostra il grafico dell'utilizzo di alcune parole in un certo intervallo temporale.
@@ -22,7 +22,7 @@ public class WordTimelineGraph extends JFrame{
 	 * @param parent
 	 * @param timelines
 	 */
-	public WordTimelineGraph(MainWindow parent, List <WordTimelineTweets> timelines) throws RuntimeException{
+	public WordTimelineGraph(MainWindow parent, List<WordTimelineTweets> timelines) throws RuntimeException{
 		if(timelines.size() > 4)
 			throw new RuntimeException("Numero massimo di timelines per grafico pari a 4, impossibile creare un grafico con " + timelines.size() + " timeline.");
 		

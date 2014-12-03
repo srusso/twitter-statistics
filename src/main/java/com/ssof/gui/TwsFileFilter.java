@@ -10,10 +10,7 @@ public class TwsFileFilter extends FileFilter {
 		}
 
 		String name = f.getName();
-		if (name != null) {
-			return (name.endsWith(".tws") || name.endsWith(".TWS"));
-		}
-		return false;
+		return (name.endsWith(".tws") || name.endsWith(".TWS"));
 	}
 
 	public String getDescription() {

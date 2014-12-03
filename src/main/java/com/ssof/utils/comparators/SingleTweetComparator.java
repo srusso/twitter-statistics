@@ -1,8 +1,9 @@
 package com.ssof.utils.comparators;
 
-import java.util.Comparator;
-import ts.twitter.SingleTweet;
 
+import com.ssof.twitter.SingleTweet;
+
+import java.util.Comparator;
 
 /**
  * Comparatore per poter ordinare una lista di SingleTweet secondo il campo desiderato.

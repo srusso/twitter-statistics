@@ -1,12 +1,14 @@
 package com.ssof.twitter;
 
 import java.util.ArrayList;
-import ts.dbm.DBManager;
+
+import com.ssof.dbm.DBManager;
+import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 
-public class TweetReceiver implements StatusListener{
+public class TweetReceiver implements StatusListener {
 	/**
 	 * Numero di tweet ricevuti prima di aggiungerli al database.
 	 */
@@ -16,11 +18,11 @@ public class TweetReceiver implements StatusListener{
 	private long totalReceived;
 	
 	public TweetReceiver(){
-		tweetBuf = new ArrayList<Status>();
+		tweetBuf = new ArrayList<>();
 		totalReceived = 0;
 	}
-	
-	
+
+	@Override
 	public void onStatus(Status status) {
 		System.out.println("Ricevuto tweet " + (++totalReceived) + " " + status.getText());
 		
@@ -30,20 +32,28 @@ public class TweetReceiver implements StatusListener{
 		}
 		
 	}
-	
+
+	@Override
 	public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
-	
+
+	@Override
 	public void onTrackLimitationNotice(int numberOfLimitedStatuses) {}
-	
+
+	@Override
 	public void onException(Exception ex) {
 		ex.printStackTrace();
 	}
-    
+
+	@Override
 	public void onScrubGeo(long userId, long upToStatusId) {
 		
 	}
-	
-	
+
+	@Override
+	public void onStallWarning(StallWarning stallWarning) {
+		
+	}
+
 	/**
 	 * Scrive tutti i tweet bufferizzati sul file.
 	 */

@@ -1,15 +1,16 @@
 package com.ssof.utils;
 
+import com.ssof.exceptions.MultipleWordsException;
+import com.ssof.twitter.SingleTweet;
+import com.ssof.utils.comparators.WordCountComparatorCount;
+import com.ssof.utils.comparators.WordCountComparatorWord;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import ts.exceptions.MultipleWordsException;
-import ts.twitter.SingleTweet;
-import ts.utils.comparators.WordCountComparatorCount;
-import ts.utils.comparators.WordCountComparatorWord;
 
 /**
  * Serve per estrarre le parole piu' usate data una lista di tweet, e salvarle su file.
@@ -24,11 +25,11 @@ public class ExtractWords {
 	 * @return Lista di String
 	 */
 	public static List <String> getMostUsedWords(List <SingleTweet> tweets, int numOfWords){
-		List <WordCount> wordList = new ArrayList<WordCount>();
-		List <String> ret = new ArrayList<String>();
+		List <WordCount> wordList = new ArrayList<>();
+		List <String> ret = new ArrayList<>();
 		int wordsToReturn;
 		int size = tweets.size();
-		WordCountComparatorWord  cw = new WordCountComparatorWord();
+		WordCountComparatorWord cw = new WordCountComparatorWord();
 		WordCountComparatorCount cc = new WordCountComparatorCount(WordCountComparatorCount.ORDER_DESCENDING);
 		
 		for(int i = 0 ; i < size ; i++){ //per ogni tweet
@@ -79,13 +80,12 @@ public class ExtractWords {
 	public static void saveWordlistToFile(List <String> words, String filename) throws IOException, MultipleWordsException{
 		FileWriter outFile = new FileWriter(filename);
 		PrintWriter out = new PrintWriter(outFile);
-		int size = words.size();
-		
-		for(int i = 0 ; i < size ; i++){
-			String [] word = words.get(i).split(" ");
-			if(word.length != 1){
+
+		for (String word1 : words) {
+			String[] word = word1.split(" ");
+			if (word.length != 1) {
 				out.close();
-				throw new MultipleWordsException(words.get(i));
+				throw new MultipleWordsException(word1);
 			}
 			out.print(word[0] + "\n");
 		}

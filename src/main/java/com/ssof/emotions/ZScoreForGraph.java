@@ -1,5 +1,11 @@
 package com.ssof.emotions;
 
+import com.ssof.datatypes.TimePeriod;
+import com.ssof.exceptions.NoSuchAttributeException;
+import com.ssof.exceptions.NoSuchDayException;
+import com.ssof.twitter.SingleTweet;
+import com.ssof.utils.comparators.DateComparator;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -10,16 +16,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import ts.datatypes.TimePeriod;
-import ts.exceptions.NoSuchAttributeException;
-import ts.exceptions.NoSuchDayException;
-import ts.exceptions.ZScoreException;
-import ts.twitter.SingleTweet;
-import ts.utils.comparators.DateComparator;
-
 public class ZScoreForGraph {
 	private Dictionary dictionary;
-	private Collection <SingleTweet> tweets;
+	private Collection<SingleTweet> tweets;
 
 	private double [] M;
 	private double [] EM2;
@@ -117,7 +116,7 @@ public class ZScoreForGraph {
 		
 	}
 	
-	public double getDayValue(Calendar day, String attribute) throws NoSuchAttributeException, NoSuchDayException{
+	public double getDayValue(Calendar day, String attribute) throws NoSuchAttributeException, NoSuchDayException {
 		int a;
 		
 		for(a = 0 ; a < attributes.length ; a++){
