@@ -63,7 +63,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class MainWindow extends JFrame implements MouseListener, ActionListener, WindowListener{
+public class MainWindow extends JFrame implements MouseListener, ActionListener, WindowListener {
 	private static final long serialVersionUID = -6210415924364979887L;
 	
 	private final String APP_NAME="Twitter Statistics";
@@ -92,19 +92,18 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 	private final JButton pertDictionaryButton = new JButton("Perturbazione Lessico Caricato");
 	private final JButton zscoregraph = new JButton("Mostra Grafico Z-scores");
 	
-	private TweetManager tweetManager;
-	
+	private final TweetManager tweetManager;
+	private final DBManager dbManager;
 	
 	private List<SingleTweet> tweets = null;
 	
 	private Dictionary dictionary = null;
 	
-	public MainWindow(){
+	public MainWindow(TweetManager tweetManager, DBManager dbManager){
+		this.tweetManager = tweetManager;
+		this.dbManager = dbManager;
 		DateFormat format=DateFormat.getDateInstance();
 		COMPILATION_TIME = format.format(new Date());
-		
-		tweetManager = new TweetManager();
-
 		
 		setSize(600, 600);
 		setTitle(APP_NAME);
@@ -248,10 +247,8 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		
 		setJMenuBar(buildMenuBar());
 		
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(getRootPane());
-		setVisible(true);
-		
 	}
 	
 	public JMenuBar buildMenuBar() {
@@ -392,15 +389,14 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 	 * Poi carica tali file in memoria.
 	 */
 	private void loadTWSFiles(){
-		fileOpenChooser.setCurrentDirectory(new File(DBManager.getWorkingDirectory()));
+		fileOpenChooser.setCurrentDirectory(new File(this.dbManager.getWorkingDirectory()));
 		int returnVal = fileOpenChooser.showOpenDialog(this);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			DBManager dbm = DBManager.getInstance();
 			File [] files = fileOpenChooser.getSelectedFiles();
 			
 			long t1 = System.currentTimeMillis();
-			tweets = dbm.loadTweets(files);
+			tweets = this.dbManager.loadTweets(files);
 			long diff = System.currentTimeMillis() - t1;
 			outputPanel.setText("Numero tweet nei file specificati: " + tweets.size() + " [caricati in " + (diff) + " ms]");
 			
@@ -700,7 +696,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		File destFile;
 		File [] sourceFiles;
 		
-		fileOpenChooser.setCurrentDirectory(new File(DBManager.getWorkingDirectory()));
+		fileOpenChooser.setCurrentDirectory(new File(this.dbManager.getWorkingDirectory()));
 		int returnVal = fileOpenChooser.showOpenDialog(this);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -710,7 +706,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 			return;
 		}
 		
-		createNewTwsChooser.setCurrentDirectory(new File(DBManager.getWorkingDirectory()));
+		createNewTwsChooser.setCurrentDirectory(new File(this.dbManager.getWorkingDirectory()));
 		returnVal = createNewTwsChooser.showOpenDialog(this);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -728,15 +724,8 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 			JOptionPane.showMessageDialog(this, "Nessun file di destinazione selezionato!", "Errore", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		
-		DBManager dbm = DBManager.getInstance();
-		
-		if(dbm==null){
-			JOptionPane.showMessageDialog(this, "Impossibile caricare il database manager [DBManager.java]!", "Errore interno", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		
-		dbm.preprocessTWSFile(TextAnalizer.getInstance(), sourceFiles, destFile);
+
+		this.dbManager.preprocessTWSFile(TextAnalizer.getInstance(), sourceFiles, destFile);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -756,7 +745,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File dir = currentDirectoryChooser.getSelectedFile();
 				if(dir != null){
-					DBManager.setWorkingDirectory(dir.getAbsolutePath());
+					this.dbManager.setWorkingDirectory(dir.getAbsolutePath());
 				}
 			}
 		} else if(name.equals("escidalprog")){
@@ -845,11 +834,15 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		}  else if(cname.equals(zscoregraph.getName())){
 			zscoregraph();
 		} else if(cname.equals(pertDictionaryButton.getName())){
-			perturbazione();
+			try {
+				perturbazione();
+			} catch (DictionaryException e1) {
+				JOptionPane.showMessageDialog(this, "Unable to perturb dictionary", "Error", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 	}
 
-	private void perturbazione() {
+	private void perturbazione() throws DictionaryException {
 		if(dictionary == null){
 			JOptionPane.showMessageDialog(this, "Nessun lessico caricato!", "Errore", JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -881,8 +874,7 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 	}
 
 	private void zscoregraph() {
-		//ZScoreGraphFrame frame =
-				new ZScoreGraphFrame(new ZScoreForGraph(dictionary, tweets));
+		new ZScoreGraphFrame(new ZScoreForGraph(dictionary, tweets));
 	}
 
 	public void mouseEntered(MouseEvent arg0) {
@@ -910,8 +902,9 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 	}
 
 	public void windowClosing(WindowEvent arg0) {
-		if(tweetManager.isListening())
+		if(tweetManager.isListening()) {
 			tweetManager.stopListening();
+		}
 		dispose();
 	}
 
@@ -937,12 +930,6 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 	
 	public List<SingleTweet> getTweets(){
 		return this.tweets;
-	}
-	
-	public static void main(String[] args) throws TwitterException, IOException{
-		
-		new MainWindow();
-		
 	}
 	
 	/**

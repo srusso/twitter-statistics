@@ -71,7 +71,7 @@ public class ZScoreForGraph {
 		M   = new double [dictionary.attributes.length];
 		EM2 = new double [dictionary.attributes.length];
 		
-		zscores = new ArrayList<SingleZScore>();
+		zscores = new ArrayList<>();
 		
 		double [] tweetMoodArray;
 		
@@ -195,7 +195,7 @@ public class ZScoreForGraph {
 	 * @return
 	 */
 	public Set <Calendar> getValidDays(){
-		Set <Calendar> days = new TreeSet<Calendar>();
+		Set <Calendar> days = new TreeSet<>();
 
 		for(SingleZScore zs : zscores){
 			Calendar c = new GregorianCalendar();

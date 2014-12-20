@@ -54,9 +54,9 @@ public class LoadDictionary {
 		int currentLine, state;
 		String line;
 		
-		List <String> attributes = new ArrayList<String>();
-		List <String> wordList = new ArrayList<String>();
-		List <List <Integer>> attributeValues = new ArrayList <List <Integer>>();
+		List <String> attributes = new ArrayList<>();
+		List <String> wordList = new ArrayList<>();
+		List <List <Integer>> attributeValues = new ArrayList <>();
 		
 		for(currentLine = 1, state = STATE_START ; true ; currentLine++ ){
 			line = in.readLine(); //legge una riga del file, togliendo i caratteri di a capo
@@ -116,9 +116,10 @@ public class LoadDictionary {
 					
 					wordList.add(words[0]);
 					
-					List <Integer> temp = new ArrayList <Integer>();
-					for(int v : values)
+					List <Integer> temp = new ArrayList <>();
+					for(int v : values) {
 						temp.add(v);
+					}
 					
 					attributeValues.add(temp);
 				}

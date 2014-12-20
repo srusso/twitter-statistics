@@ -31,19 +31,19 @@ public class ExtractWords {
 		int size = tweets.size();
 		WordCountComparatorWord cw = new WordCountComparatorWord();
 		WordCountComparatorCount cc = new WordCountComparatorCount(WordCountComparatorCount.ORDER_DESCENDING);
-		
-		for(int i = 0 ; i < size ; i++){ //per ogni tweet
-			String [] words = StringUtils.getTweetWords(tweets.get(i).text);
-			
-			for(String word : words){ //per ogni parola di quel tweet
-				if(word.length() < 3)
+
+		for (SingleTweet tweet : tweets) { //per ogni tweet
+			String[] words = StringUtils.getTweetWords(tweet.text);
+
+			for (String word : words) { //per ogni parola di quel tweet
+				if (word.length() < 3)
 					continue;
-				
+
 				WordCount e = new WordCount(word);
 				int index = Collections.binarySearch(wordList, e, cw);
-				
-				if(index < 0){ //se la parola non c'e' la aggiungo al posto giusto
-					wordList.add(- index - 1, e);
+
+				if (index < 0) { //se la parola non c'e' la aggiungo al posto giusto
+					wordList.add(-index - 1, e);
 				} else { //se invece gia c'e' aggiorno il suo contatore
 					WordCount t = wordList.get(index);
 					wordList.remove(index);

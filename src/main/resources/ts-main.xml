@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="mainWindow" class="com.ssof.gui.MainWindow">
+        <constructor-arg index="0" ref="tweetManager"/>
+        <constructor-arg index="1" ref="DBManager"/>
+    </bean>
+
+    <bean id="tweetManager" class="com.ssof.twitter.TweetManager">
+        <constructor-arg index="0" ref="tweetReceiverThread"/>
+    </bean>
+
+    <bean id="tweetReceiver" class="com.ssof.twitter.TweetReceiver">
+        <constructor-arg index="0" ref="DBManager"/>
+    </bean>
+
+    <bean id="tweetReceiverThread" class="com.ssof.twitter.TweetReceiverThread">
+        <constructor-arg index="0" ref="tweetReceiver"/>
+    </bean>
+    
+    <bean id="DBManager" class="com.ssof.dbm.DBManager"/>
+
+</beans>

@@ -82,8 +82,9 @@ public class TextAnalizer {
 			}
 		}
 		
-		if(size == 0)
+		if(size == 0) {
 			return 0;
+		}
 		
 		return 100*(ita/tot);
 	}
@@ -97,20 +98,17 @@ public class TextAnalizer {
 	 * @param text
 	 * @return
 	 */
-	public boolean isTextItalian(String text){
-		String [] words = StringUtils.getTweetWords(text); //prendo le parole del tweet
+	public boolean isTextItalian(String text) {
+		String[] words = StringUtils.getTweetWords(text); //prendo le parole del tweet
 		double tot = words.length, ita = 0;
-		
-		for(String w : words){
-			if(isItalian(w)){
-				ita+=1;
+
+		for (String w : words) {
+			if (isItalian(w)) {
+				ita += 1;
 			}
-		}		
-		
-		if(tot == 0)
-			return false;
-		
-		return (ita/tot) > MIN_PERC;
+		}
+
+		return tot != 0 && (ita / tot) > MIN_PERC;
 	}
 	
 	/**
@@ -136,10 +134,11 @@ public class TextAnalizer {
 		
 		wordlistFile = newfile;
 		
-		if(wordlist != null)
+		if(wordlist != null) {
 			wordlist.clear();
+		}
 		
-		wordlist = new ArrayList<String>();
+		wordlist = new ArrayList<>();
 		
 		FileChannel roChannel = new RandomAccessFile(wordlistFile, "r").getChannel();
 		
@@ -147,10 +146,10 @@ public class TextAnalizer {
 			MappedByteBuffer readbuffer = roChannel.map(FileChannel.MapMode.READ_ONLY, 0, (int)roChannel.size());
 			byte [] array = new byte [max_bytes];
 			boolean trunc = false;
-			String string = null;
+			String string;
 			int i;
 			
-			while(readbuffer.hasRemaining()){
+			while(readbuffer.hasRemaining()) {
 				i=0;				
 				
 				//determino quanti byte leggere, assicurandomi che tale numero non sia mai maggiore
@@ -166,11 +165,7 @@ public class TextAnalizer {
 				String [] words = string.split("\n");
 				
 				if(trunc){
-					if(string != null)
-						trunc = !string.startsWith("\n");
-				}
-				
-				if(trunc){
+					trunc = !string.startsWith("\n");
 					String newlast = wordlist.get(wordlist.size()-1);
 					wordlist.remove(wordlist.size()-1);
 					newlast += words[0];
@@ -183,13 +178,8 @@ public class TextAnalizer {
 					if(words[i].length() > 0) wordlist.add(words[i]);
 				}				
 				
-				
 				trunc = !string.endsWith("\n");
-				
 			}
-			
-			
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -204,11 +194,12 @@ public class TextAnalizer {
 	 * @return I tweet, senza quelli non italiani
 	 */
 	public List<SingleTweet> filterItalianTweets(List<SingleTweet> tweets) {
-		List <SingleTweet> ret = new LinkedList<SingleTweet>();
+		List <SingleTweet> ret = new LinkedList<>();
 		
 		for(SingleTweet t : tweets){
-			if(isTextItalian(t.text))
+			if(isTextItalian(t.text)) {
 				ret.add(t);
+			}
 		}
 		
 		return ret;

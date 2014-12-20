@@ -71,48 +71,29 @@ public class TweetSearch {
 		return false;
 	}
 	
-	private boolean satExactString(SingleTweet tweet, SearchParameters sp){
+	private boolean satExactString(SingleTweet tweet, SearchParameters sp) {
 		//se il tweet non contiene la stringa exactString, ritorno false
-		if(sp.exactString == null)
-			return true;
-		
-		return tweet.text.contains(sp.exactString);
+		return sp.exactString == null || tweet.text.contains(sp.exactString);
 	}
 	
-	private boolean satAfterDate(GregorianCalendar tweetDate, SearchParameters sp){
-		if(sp.afterDate == null)
-			return true;
-		
-		return tweetDate.after(sp.afterDate);
+	private boolean satAfterDate(GregorianCalendar tweetDate, SearchParameters sp) {
+		return sp.afterDate == null || tweetDate.after(sp.afterDate);
 	}
 	
-	private boolean satBeforeDate(GregorianCalendar tweetDate, SearchParameters sp){
-		if(sp.beforeDate == null)
-			return true;
-		
-		return tweetDate.before(sp.beforeDate);
-		
+	private boolean satBeforeDate(GregorianCalendar tweetDate, SearchParameters sp) {
+		return sp.beforeDate == null || tweetDate.before(sp.beforeDate);
 	}
 	
-	private boolean satAuthor(SingleTweet tweet, SearchParameters sp){
-		if(sp.author == null)
-			return true;
-		
-		return sp.author.equalsIgnoreCase(tweet.user);
+	private boolean satAuthor(SingleTweet tweet, SearchParameters sp) {
+		return sp.author == null || sp.author.equalsIgnoreCase(tweet.user);
 	}
 
-	private boolean satSource(SingleTweet tweet, SearchParameters sp){
-		if(sp.source == null  || sp.source.length() == 0)
-			return true;
-		
-		return sp.source.equalsIgnoreCase(tweet.source);
+	private boolean satSource(SingleTweet tweet, SearchParameters sp) {
+		return sp.source == null || sp.source.length() == 0 || sp.source.equalsIgnoreCase(tweet.source);
 	}
 
-	private boolean satPlace(SingleTweet tweet, SearchParameters sp){
-		if(sp.place == null  || sp.place.length() == 0)
-			return true;
-		
-		return sp.place.equalsIgnoreCase(tweet.place);
+	private boolean satPlace(SingleTweet tweet, SearchParameters sp) {
+		return sp.place == null || sp.place.length() == 0 || sp.place.equalsIgnoreCase(tweet.place);
 	}
 
 	/**

@@ -28,11 +28,13 @@ public class WordCount implements Comparable<WordCount>{
 	 * Considero due WordCount uguali se si riferiscono alla stessa parola.
 	 */
 	public boolean equals(Object x){
-		if(x==null)
+		if(x == null) {
 			return false;
+		}
 		
-		if(x.getClass() != getClass())
+		if(x.getClass() != getClass()) {
 			return false;
+		}
 		
 		WordCount c = (WordCount) x;
 		

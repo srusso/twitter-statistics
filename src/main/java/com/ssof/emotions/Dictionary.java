@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,13 +44,16 @@ public class Dictionary {
 	private final Set <String> hashAttributes;
 	
 	public Dictionary(String [] attributes, String [] words, List <List <Integer>> attributeValues) throws DictionaryException{
-		if(attributeValues.size() != words.length)
+		if(attributeValues.size() != words.length) {
 			throw new DictionaryException("Il numero di righe di attributeValues deve essere uguale al numero di parole");
+		}
 		
 		for(int i = 0 ; i < attributeValues.size() ; i ++){
-			if(attributeValues.get(i).size() != attributes.length)
-				throw new DictionaryException("La riga n. " + (i) + " dell'array attributeValues ha " + attributeValues.get(i).size() + " colonne, mentre ogni riga ne dovrebbe avere " + attributes.length + 
-						", cioe' pari al numero di attributi.");
+			if(attributeValues.get(i).size() != attributes.length) {
+				throw new DictionaryException(
+					"La riga n. " + (i) + " dell'array attributeValues ha " + attributeValues.get(i).size() + " colonne, mentre ogni riga ne dovrebbe avere " + attributes.length +
+					", cioe' pari al numero di attributi.");
+			}
 		}
 		
 		this.attributes = attributes;
@@ -64,25 +68,23 @@ public class Dictionary {
 			}
 		}
 		
-		hashAttributes = new TreeSet<String>();
-		for(String s : attributes)
-			hashAttributes.add(s);
+		hashAttributes = new TreeSet<>();
+		Collections.addAll(hashAttributes, attributes);
 		
-		hashWords = new HashSet<String>();
-		for(String w : words)
-			hashWords.add(w);
+		hashWords = new HashSet<>();
+		Collections.addAll(hashWords, words);
 	}
 	
 	public Dictionary(List <String> attributes, List <String> words, List <List <Integer>> attributeValues) throws DictionaryException{
-		this(attributes.toArray(new String[0]), words.toArray(new String[0]), attributeValues);
+		this(attributes.toArray(new String[attributes.size()]), words.toArray(new String[words.size()]), attributeValues);
 	}
 	
 	public Dictionary(List <String> attributes, String [] words, List <List <Integer>> attributeValues) throws DictionaryException{
-		this(attributes.toArray(new String[0]), words, attributeValues);
+		this(attributes.toArray(new String[attributes.size()]), words, attributeValues);
 	}
 	
 	public Dictionary(String [] attributes, List <String> words, List <List <Integer>> attributeValues) throws DictionaryException{
-		this(attributes, words.toArray(new String[0]), attributeValues);
+		this(attributes, words.toArray(new String[words.size()]), attributeValues);
 	}
 	
 	public Dictionary(Dictionary dictionary) throws DictionaryException{
@@ -99,21 +101,16 @@ public class Dictionary {
 		this.words = dictionary.words;
 		
 		this.attributeValues = new int [dictionary.attributeValues.length][dictionary.attributeValues[0].length];
-		
-		for(int i = 0 ; i < attributeValues.length ; i++){
-			int [] row = attributeValues[i];
-			for(int j = 0 ; j < row.length ; j++){
-				this.attributeValues[i][j] = row[j];
-			}
+
+		for (int[] row : attributeValues) {
+			System.arraycopy(row, 0, row, 0, row.length);
 		}
 		
-		hashAttributes = new TreeSet<String>();
-		for(String s : attributes)
-			hashAttributes.add(s);
+		hashAttributes = new TreeSet<>();
+		Collections.addAll(hashAttributes, attributes);
 		
-		hashWords = new HashSet<String>();
-		for(String w : words)
-			hashWords.add(w);
+		hashWords = new HashSet<>();
+		Collections.addAll(hashWords, words);
 	}
 
 	/**
@@ -131,24 +128,6 @@ public class Dictionary {
 	public Set <String> getAttributes(){
 		return hashAttributes;
 	}
-	
-	/**
-	 * Ritorna true se questo lessico contiene l'attributo specificato.
-	 * @param attribute
-	 * @return
-	 */
-	public boolean containsAttribute(String attribute){
-		return hashAttributes.contains(attribute);
-	}
-	
-	/*public List <String> getWords(){
-		ArrayList <String> w = new ArrayList<String>();
-		
-		for(String s : words)
-			w.add(s);
-		
-		return w;
-	}*/
 	
 	/**
 	 * Ritorna true se questo lessico contiene la parola specificata.
@@ -187,7 +166,7 @@ public class Dictionary {
 		//ora ordino tali liste per numero di utilizzi e le taglio
 		
 		HashMap<String, TreeSet<WordCount>> map = ep.wordUsage.map;
-		HashMap <String, NavigableSet<WordCount>> wcmap = new HashMap<String, NavigableSet<WordCount>>();
+		HashMap <String, NavigableSet<WordCount>> wcmap = new HashMap<>();
 		
 		Set <String> keys = map.keySet();
 		for(String key : keys){
@@ -198,15 +177,17 @@ public class Dictionary {
 				tot += w.count;
 			}
 			
-			TreeSet <WordCount> orderedList = new TreeSet<WordCount>(cc); orderedList.addAll(list);
+			TreeSet <WordCount> orderedList = new TreeSet<>(cc);
+			orderedList.addAll(list);
 			
 			long tot2 = 0, thresh = (long) (tot * ep.TOT_PERC);
 			WordCount first = orderedList.first(), last = orderedList.first();
 			for(WordCount w : list){
 				tot2 += w.count;
 				last = w;
-				if(tot2 > thresh)
+				if(tot2 > thresh) {
 					break;
+				}
 			}
 			
 			NavigableSet <WordCount> mostUsedWords = orderedList.subSet(first, true, last, true);
@@ -260,9 +241,9 @@ public class Dictionary {
 		PrintWriter out = new PrintWriter(outFile);
 		
 		out.print("attributi:\n");
-		
-		for(int i = 0 ; i < attributes.length ; i++){
-			out.print(attributes[i] + "\n");
+
+		for (String attribute : attributes) {
+			out.print(attribute + "\n");
 		}
 		
 		out.print("\nparole:\n\n");
@@ -294,8 +275,8 @@ public class Dictionary {
 	 * @param tweets
 	 */
 	public void runExpansionTests(List <SingleTweet> tweets){
-		List <SingleTweet> tweets1 = new ArrayList<SingleTweet>();
-		List <SingleTweet> tweets2 = new ArrayList<SingleTweet>();
+		List <SingleTweet> tweets1 = new ArrayList<>();
+		List <SingleTweet> tweets2 = new ArrayList<>();
 		
 		Iterator<SingleTweet> i = tweets.iterator();
 		boolean choice = true;
@@ -308,22 +289,6 @@ public class Dictionary {
 		WordUsage wu1 = new WordUsage(this, tweets1);
 		WordUsage wu2 = new WordUsage(this, tweets2);
 
-		/*List <DictionaryComparison> comparisons = new ArrayList<DictionaryComparison>();
-		for(double perc = 0.01 ; perc < 1.0 ; perc+=0.01){
-			ExpansionParameters ep1 = new ExpansionParameters(wu1, perc);
-			ExpansionParameters ep2 = new ExpansionParameters(wu2, perc);
-
-			try {
-				Dictionary d1 = this.expand(ep1);
-				Dictionary d2 = this.expand(ep2);
-
-				DictionaryComparison dc = d1.diff(d2);
-				comparisons.add(dc);
-			} catch (DictionaryException e) {
-
-			}
-		}*/
-		
 		ExpansionParameters ep1 = new ExpansionParameters(wu1, 0.02);
 		ExpansionParameters ep2 = new ExpansionParameters(wu2, 0.02);
 
@@ -342,7 +307,9 @@ public class Dictionary {
 	public String getTweetMoodAsString(String tweetText){
 		double [] mood = getTweetMood(tweetText);
 		
-		if(mood == null) return "Messaggio non valutabile";
+		if(mood == null) {
+			return "Messaggio non valutabile";
+		}
 		
 		String stringMood;
 		
@@ -350,8 +317,9 @@ public class Dictionary {
 		
 		for(int i = 0 ; i < attributes.length ; i++){
 			stringMood += attributes[i] + " = " +  mood[i];
-			if(i < attributes.length - 1)
+			if(i < attributes.length - 1) {
 				stringMood += ", ";
+			}
 		}
 		
 		stringMood += ")\n";
@@ -372,11 +340,13 @@ public class Dictionary {
 		double [] mood = new double[attributeValues[0].length];
 		int tot = 0;
 		
-		for(int i = 0 ; i < wordOccurrences.length ; i++)
+		for(int i = 0 ; i < wordOccurrences.length ; i++) {
 			wordOccurrences[i] = 0;
+		}
 		
-		for(int i = 0 ; i < mood.length ; i++)
+		for(int i = 0 ; i < mood.length ; i++) {
 			mood[i] = 0;
+		}
 		
 		
 		for(String w : tweetWords){ //per ogni parola del tweet
@@ -388,20 +358,20 @@ public class Dictionary {
 			}
 		}
 		
-		if(tot == 0)
+		if(tot == 0) {
 			return null;
+		}
 		
 		//umore = (c1 * attributi1 + c2 * attributi2 + ... + cn * attributin) / (c1 + c2 + ... + cn)
 		//dove ci = numero di occorrenze della parola i-esima
 		//e attributii = array attributi parola i-esima
 		for(int i = 0 ; i < wordOccurrences.length ; i++){
-			for(int j = 0 ; j < wordOccurrences[i] ; j++)
+			for(int j = 0 ; j < wordOccurrences[i] ; j++) {
 				mood = ArrayMath.arraySum(mood, attributeValues[i]);
+			}
 		}
 		
-		mood = ArrayMath.arrayDivide(mood, tot);
-		
-		return mood;
+		return ArrayMath.arrayDivide(mood, tot);
 	}
 	
 
@@ -412,7 +382,7 @@ public class Dictionary {
 	 * @return
 	 */
 	private List<Integer> getRows(HashMap<String, NavigableSet<WordCount>> wcmap, String newWord) {
-		List <Integer> rows = new ArrayList<Integer>();
+		List <Integer> rows = new ArrayList<>();
 		
 		Set <String> keys = wcmap.keySet();
 		for(String key : keys){
@@ -457,17 +427,19 @@ public class Dictionary {
 		}
 		
 		for(int r : rows){ //calcolo l'array somma
-			for(int j = 0 ; j < attributeValues[r].length ; j++)
+			for(int j = 0 ; j < attributeValues[r].length ; j++) {
 				result[j] += attributeValues[r][j];
+			}
 		}
 		
 		for(int i = 0 ; i < result.length ; i++){ //divido per il numero di array per fare la media
 			result[i] /= rows.size();
 		}
 		
-		List <Integer> res = new ArrayList<Integer>(); //riverso l'array su una lista
-		for(double i : result)
+		List <Integer> res = new ArrayList<>(); //riverso l'array su una lista
+		for(double i : result) {
 			res.add((int)i);
+		}
 		
 		return res;
 	}
@@ -477,18 +449,14 @@ public class Dictionary {
 	 * La perturbazione d deve essere compresa tra 0 e 1.
 	 * @return
 	 */
-	public Dictionary addPerturbation(double d){
-		if(d < 0 || d > 1)
+	public Dictionary addPerturbation(double d) throws DictionaryException {
+		if(d < 0 || d > 1) {
 			return null;
+		}
 		
 		Random random = new Random();
 		
-		Dictionary ret;
-		try {
-			ret = new Dictionary(this);
-		} catch (DictionaryException e) {
-			return null;
-		}
+		Dictionary ret = new Dictionary(this);
 		
 		for(int i = 0 ; i < attributeValues.length ; i++){
 			for(int j = 0 ; j < attributeValues[i].length ; j++){

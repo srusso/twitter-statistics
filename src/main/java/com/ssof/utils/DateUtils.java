@@ -14,24 +14,28 @@ public class DateUtils {
 	public static GregorianCalendar translateStringDate(String date) throws DateFormatException{
 		GregorianCalendar control;
 		int day, month, year, maxDay;
-		String div = null;
+		final String div;
 		
-		if(date.contains("/"))
+		if(date.contains("/")) {
 			div = "/";
-		else if(date.contains("-"))
+		} else if(date.contains("-")) {
 			div = "-";
-		else throw new DateFormatException(date, null);
+		} else {
+			throw new DateFormatException(date, null);
+		}
 		
 		String [] pieces = date.split(div);
 		
-		if(pieces.length != 3)
+		if(pieces.length != 3) {
 			throw new DateFormatException(date, null);
+		}
 		
 		//prendo giorno del mese
 		try{
 			day = new Integer(pieces[0]);
-			if(day < 1 || day > 31)
+			if(day < 1 || day > 31) {
 				throw new DateFormatException(date, "Il giorno deve essere compreso tra 1 e 31");
+			}
 		} catch(NumberFormatException e){
 			throw new DateFormatException(date, "La data contiene caratteri che non sono numeri");
 		}
@@ -39,8 +43,9 @@ public class DateUtils {
 		//mese
 		try{
 			month = new Integer(pieces[1]);
-			if(month < 1 || month > 12)
+			if(month < 1 || month > 12) {
 				throw new DateFormatException(date, "Il mese deve essere compreso tra 1 e 12");
+			}
 		} catch(NumberFormatException e){
 			throw new DateFormatException(date, "La data contiene caratteri che non sono numeri");
 		}

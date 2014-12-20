@@ -89,8 +89,9 @@ public class ZScore {
 			//prendo l'array che rappresenta l'umore del tweet
 			tweetMoodArray = dictionary.getTweetMood(tweet.text);
 			
-			if(tweetMoodArray == null) //ignoro i tweet non valutabili
+			if(tweetMoodArray == null) { //ignoro i tweet non valutabili
 				continue;
+			}
 			
 			totalTweets++; //aggiorno il numero di tweet totali
 			
@@ -111,8 +112,9 @@ public class ZScore {
 			
 		}
 		
-		if(tweetsInInterval == 0)
+		if(tweetsInInterval == 0) {
 			throw new ZScoreException("Nessun tweet nell'intervallo specificato");
+		}
 		
 		for(int i = 0 ; i < M.length ; i++){
 			M[i]   = Mtot[i]   / totalTweets;

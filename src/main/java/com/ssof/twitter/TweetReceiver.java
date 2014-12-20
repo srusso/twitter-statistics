@@ -16,8 +16,10 @@ public class TweetReceiver implements StatusListener {
 	
 	private ArrayList <Status> tweetBuf;
 	private long totalReceived;
-	
-	public TweetReceiver(){
+	private DBManager dbManager;
+
+	public TweetReceiver(DBManager dbManager){
+		this.dbManager = dbManager;
 		tweetBuf = new ArrayList<>();
 		totalReceived = 0;
 	}
@@ -58,9 +60,7 @@ public class TweetReceiver implements StatusListener {
 	 * Scrive tutti i tweet bufferizzati sul file.
 	 */
 	public void flush(){
-		DBManager dbm = DBManager.getInstance();
-		
-		dbm.addTweets(tweetBuf); //aggiungi tweets al database
+		this.dbManager.addTweets(tweetBuf); //aggiungi tweets al database
 		
 		tweetBuf.clear(); //svuota il buffer
 	}

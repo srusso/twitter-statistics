@@ -2,6 +2,8 @@ package com.ssof.utils;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class StringUtils {
@@ -9,7 +11,7 @@ public class StringUtils {
 	private static final String TAG_START = "#";
 	private static final String AT_START = "@";
 	
-	static ArrayList <String> articles = new ArrayList<>();
+	static Set<String> articles = new HashSet<>();
 	
 	static {
 		articles.add("del");
@@ -40,14 +42,6 @@ public class StringUtils {
 	}
 	
 	/**
-	 * Ritorna le parole del tweet, utilizzando lo spazio come delimitatore.
-	 * Da utilizzare solo su tweet italiani, senza accenti, e senza articoli.
-	 */
-	public static String [] getTweetWords_spacedelim(String tweetText){
-		return tweetText.split(" ");
-	}
-	
-	/**
 	 * Ritorna un array contenente le parole del tweet, sia italiane che non, compresi gli articoli.
 	 * Elimina solo url e hashtag.
 	 */
@@ -66,27 +60,11 @@ public class StringUtils {
 	/**
 	 * Ritorna un array contenente le parole del tweet, sia italiane che non,
 	 * eliminando articoli, parole pi� corte di due caratteri, url e hashtag.
-	 */
-	public static String [] getTweetWordsNoArticles(String tweetText){
-		String [] words = tweetText.split("[^\\w[\\d]&&[^@]]+");
-		ArrayList <String> list = new ArrayList <String>();
-
-		for (final String word : words) {
-			if (!isArticle(word) && !isUrlOrTag(word) && word.length() > 2)
-				list.add(word);
-		}
-		
-		return list.toArray(new String[list.size()]);
-	}
-	
-	/**
-	 * Ritorna un array contenente le parole del tweet, sia italiane che non,
-	 * eliminando articoli, parole pi� corte di due caratteri, url e hashtag.
 	 * Toglie gli accenti dalle parole.
 	 */
 	public static String [] getTweetWordsNoArticlesNoAccents(String tweetText){
 		String [] words = removeAccents(tweetText).split("[^\\w[\\d]&&[^@]]+");
-		ArrayList <String> list = new ArrayList <String>();
+		ArrayList <String> list = new ArrayList <>();
 
 		for (final String word : words) {
 			if (!isArticle(word) && !isUrlOrTag(word) && word.length() > 2)
@@ -97,11 +75,7 @@ public class StringUtils {
 	}
 
 	private static boolean isArticle(String word) {
-		for(String article : articles)
-			if(article.equals(word))
-				return true;
-				
-		return false;
+		return articles.contains(word);
 	}
 
 	private static boolean isUrlOrTag(String string) {

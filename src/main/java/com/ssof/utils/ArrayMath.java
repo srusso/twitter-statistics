@@ -8,11 +8,12 @@ public class ArrayMath {
 	 * @return
 	 */
 	public static double[] arraySum(double[] a1, int[] a2) {
-		if(a1.length != a2.length)
-			throw new RuntimeException("Errore nella arraySum() in Dictionary.java. Array di lunghezza diversa non possono essere sommati");
+		if(a1.length != a2.length) {
+			throw new RuntimeException(
+				"Errore nella arraySum() in Dictionary.java. Array di lunghezza diversa non possono essere sommati");
+		}
 		
 		double [] result = new double[a1.length];
-		
 		
 		for(int i = 0 ; i < result.length ; i++){
 			result[i] = a1[i] + a2[i];
@@ -28,11 +29,12 @@ public class ArrayMath {
 	 * @return
 	 */
 	public static double[] arraySum(double[] a1, double[] a2) {
-		if(a1.length != a2.length)
-			throw new RuntimeException("Errore nella arraySum() in Dictionary.java. Array di lunghezza diversa non possono essere sommati");
+		if(a1.length != a2.length) {
+			throw new RuntimeException(
+				"Errore nella arraySum() in Dictionary.java. Array di lunghezza diversa non possono essere sommati");
+		}
 		
 		double [] result = new double[a1.length];
-		
 		
 		for(int i = 0 ; i < result.length ; i++){
 			result[i] = a1[i] + a2[i];

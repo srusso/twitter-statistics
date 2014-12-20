@@ -14,11 +14,6 @@ public class MultipleZScore {
 	private Dictionary dictionary;
 	private Collection<SingleTweet> tweets;
 
-	private double [] M;
-	private double [] EM2;
-
-	private long totalTweets;
-	
 	public List <SingleZScore> zscores;
 	
 	public MultipleZScore(Dictionary d, Collection <SingleTweet> tweets){
@@ -43,22 +38,23 @@ public class MultipleZScore {
 	private void computeZScores(){
 		double [] Mtot   = new double [dictionary.attributes.length];
 		double [] EM2tot   = new double [dictionary.attributes.length];
+
+		final double[] m = new double[dictionary.attributes.length];
+		final double[] EM2 = new double[dictionary.attributes.length];
 		
-		M   = new double [dictionary.attributes.length];
-		EM2 = new double [dictionary.attributes.length];
-		
-		zscores = new ArrayList<SingleZScore>();
+		zscores = new ArrayList<>();
 		
 		double [] tweetMoodArray;
-		
-		totalTweets = 0;
+
+		long totalTweets = 0;
 		
 		for(SingleTweet tweet : tweets){
 			//prendo l'array che rappresenta l'umore del tweet
 			tweetMoodArray = dictionary.getTweetMood(tweet.text);
 			
-			if(tweetMoodArray == null) //ignoro i tweet non valutabili
+			if(tweetMoodArray == null) { //ignoro i tweet non valutabili
 				continue;
+			}
 			
 			TimePeriod tp = getDayTimePeriod(tweet.millisSinceEpoch);
 			SingleZScore zs = getZScore(tp, zscores);
@@ -81,12 +77,12 @@ public class MultipleZScore {
 		}
 		
 		for(SingleZScore zs : zscores){
-			for(int i = 0 ; i < M.length ; i++){
-				M[i]   = Mtot[i]   / totalTweets;
+			for(int i = 0 ; i < m.length ; i++){
+				m[i]   = Mtot[i]   / totalTweets;
 				zs.X[i]   = zs.Xtot[i]   / zs.tweetsInInterval;
 				EM2[i] = EM2tot[i] / totalTweets;
 
-				zs.Z[i] = (zs.X[i] - M[i]) / Math.sqrt( EM2[i] - (M[i]*M[i]) ) ;
+				zs.Z[i] = (zs.X[i] - m[i]) / Math.sqrt( EM2[i] - (m[i]* m[i]) ) ;
 			}
 		}
 		
@@ -94,8 +90,9 @@ public class MultipleZScore {
 	
 	private SingleZScore getZScore(TimePeriod tp, List<SingleZScore> zscores) {
 		for(SingleZScore zs : zscores){
-			if(zs.timeInterval.equals(tp))
+			if(zs.timeInterval.equals(tp)) {
 				return zs;
+			}
 		}
 		
 		return null;
@@ -119,7 +116,6 @@ public class MultipleZScore {
 		endTime.set(GregorianCalendar.MINUTE, 59);
 		endTime.set(GregorianCalendar.SECOND, 59);
 		endTime.set(GregorianCalendar.MILLISECOND, 999);
-		
 		
 		return new TimePeriod(startTime, endTime);	
 	}

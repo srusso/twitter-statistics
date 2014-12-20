@@ -34,7 +34,7 @@ public class WordUsage {
 	 * NOTA BENE: I tweet ricevuti come parametro devono essere solo italiani, senza accenti e senza articoli.
 	 */
 	private void getWordUsage(Dictionary dictionary, List <SingleTweet> tweets){
-		HashMap <String, HashMap<String, Integer>> tempMap = new HashMap<String, HashMap<String, Integer>>();
+		HashMap <String, HashMap<String, Integer>> tempMap = new HashMap<>();
 		
 		//per ogni tweet
 		for(SingleTweet tweet : tweets){
@@ -60,9 +60,11 @@ public class WordUsage {
 					Integer k = iWordCount.get(tweetWords[j]); //k = numero di co-occorrenze di j per i
 					
 					//aggiorno tale valore
-					if(k!=null)
+					if(k != null) {
 						iWordCount.put(tweetWords[j], k+1);
-					else iWordCount.put(tweetWords[j], 1);
+					} else {
+						iWordCount.put(tweetWords[j], 1);
+					}
 				}
 				
 			}
@@ -78,7 +80,7 @@ public class WordUsage {
 	}
 
 	private TreeSet<WordCount> getTreeSetFromHashMap(HashMap<String, Integer> hm) {
-		TreeSet <WordCount> treeSet = new TreeSet<WordCount>();
+		TreeSet <WordCount> treeSet = new TreeSet<>();
 		
 		Set <String> keySet = hm.keySet();
 		for(String key : keySet){

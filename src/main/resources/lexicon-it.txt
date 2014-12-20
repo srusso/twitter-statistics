@@ -1,0 +1,97 @@
+# Ogni riga che inizia con il simbolo '#' viene ignorata.
+# Ad ogni parola vengono assegnati diversi valori, uno per ognuno dei seguenti attributi.
+
+attributi:
+
+felicita
+tristezza
+ansia
+fretta
+negativita
+positivita
+desiderio
+dovere
+
+# I valori corrispondono ognuno ad un attributo, nell'ordine in cui sono stati dichiarati gli attributi
+# qui sopra. I valori ammessi sono interi nell'intervallo [0, 100]
+
+parole:
+#			felicita tristezza ansia fretta negativita positivita desiderio dovere
+non         0        0         0     0      100        0          0         0
+piu         0        20        0     0      20         0          0         0
+ora         0        0         20    40     0          0          0         10
+ciao        50       0         0     35     0          30         0         0
+grazie      20       0         0     0      0          60         0         0
+solo        0        50        20    0      50         0          0         0
+mia         0        0         0     0      0          10         30        0
+mio         0        0         0     0      0          10         30        0
+sempre      0        0         15    0      0          0          0         0
+bene        70       0         0     0      0          90         20        0
+casa        30       30        0     0      20         20         0         0
+fatto       0        0         0     0      0          20         0         50
+mai         0        20        0     0      30         0          0         0
+ancora      0        0         0     0      0          25         0         0
+bella       0        0         0     0      0          100        30        0
+cazzo       0        40        20    0      70         0          0         0
+grande      0        0         0     0      0          10         0         0
+foto        10       10        0     0      0          0          0         0
+voglio      0        10        0     20     0          0          100       0
+tanto       20       0         0     10     0          0          0         10
+bello       10       0         0     0      0          80         20        0
+stasera     0        0         0     0      0          0          10        10
+devo        0        10        0     10     20         0          0         100
+troppo      0        20        10    0      40         0          0         0
+niente      0        0         0     0      20         0          0         0
+male        0        50        0     0      70         0          0         0
+vita        0        0         0     0      0          0          0         0
+buona       50       0         0     0      0          80         20        0
+meglio      10       0         0     0      0          80         10        0
+vedere      0        0         0     0      0          0          20        10
+dire        0        0         0     10     0          0          0         0
+molto       10       0         0     0      0          30         10        10
+senza       0        20        0     0      30         0          0         0
+giorno      0        0         0     0      0          10         0         0
+adesso      0        0         0     60     0          0          0         10
+piace       20       0         0     0      0          90         30        0
+andare      0        0         0     0      0          0          0         20
+posso       10       0         0     0      0          50         0         0
+notte       0        0         0     0      0          0          0         0
+amore       60       0         0     0      0          60         50        0
+giornata    10       0         0     0      0          30         0         0
+forza       10       0         0     0      0          35         0         10
+lavoro      0        0         0     0      0          0          0         70
+poco        0        0         0     0      40         0          0         0
+fine        0        20        20    20     20         0          0         10
+
+#			felicita tristezza ansia fretta negativita positivita desiderio dovere
+mondo       0        0         0     0      0          20         0         0
+nuovo       25       0         0     0      0          35         20        0
+mamma       40       0         0     0      0          30         0         0
+stazione    0        0         60    70     15         0          0         20
+meno        0        0         0     0      15         0          0         0
+vedo        0        0         10    10     0          0          10        0
+credo       0        0         0     0      0          10         0         0
+certo       0        0         0     0      0          10         0         0
+merda       0        20        0     0      70         0          0         0
+buongiorno  0        0         0     0      0          80         0         0
+basta       0        0         0     0      50         0          0         0
+secondo     0        0         0     0      0          0          0         0
+oddio       0        0         15    0      30         0          0         30
+quasi       0        0         10    10     0          0          0         0
+voglia      0        0         0     0      0          0          100       0
+sole        20       0         0     0      0          50         30        0
+persone     0        0         0     0      0          0          0         0
+almeno      0        0         0     0      0          0          0         10
+abbiamo     0        0         0     0      0          10         0         0
+penso       0        0         0     0      0          0          20        0
+auguri      0        0         0     0      0          70         0         0
+caffe       0        0         30    0      0          0          30        0
+scuola      0        0         60    0      50         0          0         80
+spero       0        0         0     0      0          0          90        0
+capito      40       0         0     0      0          35         0         0
+serata      15       0         0     0      0          0          25        0
+guarda      0        0         0     0      0          25         25        0
+magari      0        0         0     0      0          0          50        0
+finalmente  40       0         0     15     0          70         0         0
+vorrei      0        0         0     0      0          0          100       0
+sento       0        0         0     0      0          10         0         0

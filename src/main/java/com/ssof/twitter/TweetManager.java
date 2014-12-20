@@ -1,35 +1,25 @@
 package com.ssof.twitter;
 
-import twitter4j.TwitterException;
-
-
 public class TweetManager {
-	
+	private final TweetReceiverThread tweetReceiverThread;
 	private Thread receiverThread = null;
-	
-	public TweetManager(){
-		
+
+	public TweetManager(TweetReceiverThread tweetReceiverThread){
+		this.tweetReceiverThread = tweetReceiverThread;
 	}
 	
 	public boolean isListening(){
-		return receiverThread!=null;
+		return receiverThread != null;
 	}
 	
 	public void startListening(){
-		
 		if(receiverThread != null){
 			return;
 		}
 		
-		try {
-			receiverThread = new Thread(new TweetReceiverThread(this));
-		} catch (TwitterException e) {
-			System.err.println("Errore nella creazione dello StatusListenerManager. Eccezione:");
-			e.printStackTrace();
-		}
+		receiverThread = new Thread(this.tweetReceiverThread);
 		
-		if(receiverThread != null) receiverThread.start();
-		else System.err.println("Impossibile avviare il thread listener.");
+		receiverThread.start();
 	}
 	
 	public void stopListening(){
@@ -58,8 +48,9 @@ public class TweetManager {
 	 */
 	public void restart() {
 		try {
-			if(receiverThread!=null)
+			if(receiverThread!=null) {
 				receiverThread.join();
+			}
 		} catch (InterruptedException e1) {
 			
 		}
