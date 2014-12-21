@@ -1,9 +1,7 @@
 package com.ssof.emotions;
 
 import com.ssof.datatypes.TimePeriod;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import org.joda.time.DateTime;
 
 
 public class SingleZScore{
@@ -47,8 +45,7 @@ public class SingleZScore{
 		}
 		
 		
-		Calendar cal = new GregorianCalendar();
-		cal.setTimeInMillis(t.getEnd());
-		dayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1;
+		DateTime cal = new DateTime(t.getEnd());
+		dayOfWeek = cal.getDayOfWeek() - 1;
 	}
 }

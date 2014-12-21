@@ -4,7 +4,10 @@ import com.ssof.datatypes.MoodData;
 import com.ssof.exceptions.NoSuchAttributeException;
 import com.ssof.exceptions.NoSuchDayException;
 import com.ssof.utils.comparators.DateComparator;
+import org.joda.time.DateTime;
 
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -19,13 +22,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 /**
  * Grafico che mostra il grafico dell'andamento delle varie emozioni nel tempo.
@@ -50,7 +48,7 @@ public class MoodGraphPanel extends JPanel implements MouseListener, MouseMotion
 	 */
 	private MoodData mdata;
 	
-	private Calendar [] days;
+	private DateTime [] days;
 	
 	private String [] selectedAttributes;
 	
@@ -80,10 +78,10 @@ public class MoodGraphPanel extends JPanel implements MouseListener, MouseMotion
 		addMouseMotionListener(this);
 		addComponentListener(this);
 		
-		List<Calendar> dayList = new ArrayList <>();
+		List<DateTime> dayList = new ArrayList <>();
 		dayList.addAll(mdata.getValidDays());
 		Collections.sort(dayList, new DateComparator());
-		days = dayList.toArray(new Calendar[dayList.size()]);
+		days = dayList.toArray(new DateTime[dayList.size()]);
 		
 		selectedAttributes = null;
 		
@@ -215,11 +213,11 @@ public class MoodGraphPanel extends JPanel implements MouseListener, MouseMotion
 			int d = (mouseX - originx) / dayLenPx;
 		
 			if(d < days.length){
-				String dateToDraw = "Giorno " + days[d].get(GregorianCalendar.DAY_OF_MONTH)
+				String dateToDraw = "Giorno " + days[d].getDayOfMonth()
 						+ "/" +
-						(days[d].get(GregorianCalendar.MONTH) + 1)
+						(days[d].getMonthOfYear())
 						+ "/" + 
-						days[d].get(GregorianCalendar.YEAR);
+						days[d].getYear();
 
 				FontMetrics metrics = g2.getFontMetrics(getFont());
 				int hgt = metrics.getHeight();

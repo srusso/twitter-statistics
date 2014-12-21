@@ -1,11 +1,12 @@
 package com.ssof.utils.comparators;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+
 import java.util.Comparator;
 
-public class DateComparator implements Comparator<Calendar>{
+public class DateComparator implements Comparator<DateTime>{
 
-	public int compare(Calendar o1, Calendar o2) {
+	public int compare(DateTime o1, DateTime o2) {
 		return o1.compareTo(o2);
 	}	
 	

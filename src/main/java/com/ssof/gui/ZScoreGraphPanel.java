@@ -4,6 +4,7 @@ import com.ssof.emotions.ZScoreForGraph;
 import com.ssof.exceptions.NoSuchAttributeException;
 import com.ssof.exceptions.NoSuchDayException;
 import com.ssof.utils.comparators.DateComparator;
+import org.joda.time.DateTime;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -21,9 +22,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class ZScoreGraphPanel extends JPanel implements MouseListener, MouseMotionListener, ComponentListener{
@@ -42,14 +41,14 @@ public class ZScoreGraphPanel extends JPanel implements MouseListener, MouseMoti
 	 */
 	private int mouseX = 0, mouseY = 0;
 	
-	private Calendar [] days;
+	private DateTime [] days;
 	
 	private String [] selectedAttributes;
 	
 	public ZScoreGraphPanel(ZScoreForGraph zscores){
 		this.zscores = zscores;
 		
-		lineColors = new ArrayList<Color>();
+		lineColors = new ArrayList<>();
 		lineColors.add(Color.RED);
 		lineColors.add(Color.BLUE);
 		lineColors.add(Color.CYAN);
@@ -72,10 +71,10 @@ public class ZScoreGraphPanel extends JPanel implements MouseListener, MouseMoti
 		addMouseMotionListener(this);
 		addComponentListener(this);
 		
-		List<Calendar> dayList = new ArrayList<>();
+		List<DateTime> dayList = new ArrayList<>();
 		dayList.addAll(zscores.getValidDays());
 		Collections.sort(dayList, new DateComparator());
-		days = dayList.toArray(new Calendar[0]);
+		days = dayList.toArray(new DateTime[dayList.size()]);
 		
 		selectedAttributes = null;
 	}
@@ -126,69 +125,67 @@ public class ZScoreGraphPanel extends JPanel implements MouseListener, MouseMoti
 		dayLineDist   = (endTimex - startTimex) / days.length;
 		
 		double max_y_draw = Double.MIN_VALUE;
-		for(int s = 0 ; s < selectedAttributes.length ; s++){
-			String selectedAttribute = selectedAttributes[s];
-			
+		for (String selectedAttribute : selectedAttributes) {
 			//passo al calcolo dei valori da disegnare
-			double [] values = new double[days.length];
+			double[] values = new double[days.length];
 			double maxValue = Double.MIN_VALUE; //valore massimo sull'asse delle ordinate
 
 			//prendo i valori da disegnare sull'asse delle ordinate (cioe' la media dell'attributo selezionato per ogni giorno)
-			for(int j = 0 ; j < values.length ; j++){
-				try{
+			for (int j = 0; j < values.length; j++) {
+				try {
 					values[j] = zscores.getDayValue(days[j], selectedAttribute);
-				} catch(NoSuchDayException | NoSuchAttributeException e){
+				} catch (NoSuchDayException | NoSuchAttributeException e) {
 					System.out.println(e);
 					return;
 				}
 
-				if(values[j] >=0){
-					if(maxValue < values[j]){
+				if (values[j] >= 0) {
+					if (maxValue < values[j]) {
 						maxValue = values[j];
-						if(maxValue > max_y_draw)
+						if (maxValue > max_y_draw)
 							max_y_draw = maxValue;
 					}
 				} else {
 					double temp = -values[j];
-					if(maxValue < temp){
+					if (maxValue < temp) {
 						maxValue = temp;
-						if(maxValue > max_y_draw)
+						if (maxValue > max_y_draw)
 							max_y_draw = maxValue;
 					}
 				}
 			}
 		}
-		
-		for(int s = 0 ; s < selectedAttributes.length ; s++){
-			String selectedAttribute = selectedAttributes[s];
-			
+
+		for (String selectedAttribute : selectedAttributes) {
 			//passo al calcolo dei valori da disegnare
-			double [] values = new double[days.length];
+			double[] values = new double[days.length];
 
 			//prendo i valori da disegnare sull'asse delle ordinate (cioe' la media dell'attributo selezionato per ogni giorno)
-			for(int j = 0 ; j < values.length ; j++){
-				try{
+			for (int j = 0; j < values.length; j++) {
+				try {
 					values[j] = zscores.getDayValue(days[j], selectedAttribute);
-				} catch(NoSuchDayException e){
+				} catch (NoSuchDayException e) {
 					System.out.println(e);
 					return;
-				} catch(NoSuchAttributeException e){
+				} catch (NoSuchAttributeException e) {
 					System.out.println(e);
 					return;
 				}
 			}
 
 			//finalmente, disegno il grafico
-			try{
+			try {
 				g2.setColor(lineColors.get(zscores.getAttributePosition(selectedAttribute)));
-			} catch(RuntimeException e){
-				JOptionPane.showMessageDialog(null, "Impossibile mostrare grafico di \'" + selectedAttribute + "\'.", "Errore interno", JOptionPane.ERROR_MESSAGE);
+			} catch (RuntimeException e) {
+				JOptionPane.showMessageDialog(null, "Impossibile mostrare grafico di \'" + selectedAttribute + "\'.", "Errore " +
+					"interno", JOptionPane.ERROR_MESSAGE);
 			}
-			
-			for(int j = 1 ; j < values.length ; j++){
-				int h1 = (int) ((int) zeroLine - (values[j-1]*verticalHeight / max_y_draw));
-				int h2 = (int) ((int) zeroLine - (values[j]*verticalHeight / max_y_draw));
-				g2.drawLine(startTimex + (j-1) * dayLineDist + dayLineDist/2, h1, startTimex + j * dayLineDist + dayLineDist/2, h2);
+
+			for (int j = 1; j < values.length; j++) {
+				int h1 = (int) (zeroLine - (values[j - 1] * verticalHeight / max_y_draw));
+				int h2 = (int) (zeroLine - (values[j] * verticalHeight / max_y_draw));
+				g2.drawLine(startTimex + (j - 1) * dayLineDist + dayLineDist / 2, h1, startTimex + j * dayLineDist + dayLineDist
+					/ 2, h2);
 			}
 		}
 		
@@ -205,16 +202,16 @@ public class ZScoreGraphPanel extends JPanel implements MouseListener, MouseMoti
 		
 		g2.setColor(axisColor);
 		//disegno la data vicino al puntatore del mouse
-		if(startTimex > originx || mouseX < endx){
+		if(mouseX < endx){
 			int dayLenPx = (endx - originx) / days.length;
 			int d = (mouseX - originx) / dayLenPx;
 		
 			if(d < days.length){
-				String dateToDraw = "Giorno " + days[d].get(GregorianCalendar.DAY_OF_MONTH)
+				String dateToDraw = "Giorno " + days[d].getDayOfMonth()
 						+ "/" +
-						(days[d].get(GregorianCalendar.MONTH) + 1)
+						(days[d].getMonthOfYear())
 						+ "/" + 
-						days[d].get(GregorianCalendar.YEAR);
+						days[d].getYear();
 
 				int wdt = metrics.stringWidth(dateToDraw);
 				int tx = mouseX - wdt/2;

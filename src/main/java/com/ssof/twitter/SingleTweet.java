@@ -1,9 +1,7 @@
 package com.ssof.twitter;
 
 import com.ssof.datatypes.TimePeriod;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import org.joda.time.DateTime;
 
 public class SingleTweet {
 	public final long millisSinceEpoch;
@@ -26,10 +24,8 @@ public class SingleTweet {
 		this.place = place;
 	}
 	
-	public Calendar getDate() {
-		Calendar c = new GregorianCalendar();
-		c.setTimeInMillis(millisSinceEpoch);
-		return c;
+	public DateTime getDate() {
+		return new DateTime(millisSinceEpoch);
 	}
 	
 	/**
@@ -40,10 +36,7 @@ public class SingleTweet {
 	 * @return
 	 */
 	public int getDayOfWeek(){
-		Calendar c = new GregorianCalendar();
-		c.setTimeInMillis(millisSinceEpoch);
-		
-		return c.get(Calendar.DAY_OF_WEEK) - 1;
+		return this.getDate().getDayOfWeek() - 1;
 	}
 
 	public long getMillisSinceEpoch() {

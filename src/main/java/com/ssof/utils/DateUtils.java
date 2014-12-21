@@ -5,16 +5,14 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.GregorianCalendar;
-
 public class DateUtils {
 	private final static DateTimeFormatter FORMATTER_DASH = DateTimeFormat.forPattern("dd-MM-yyyy");
 	private final static DateTimeFormatter FORMATTER_SLASH = DateTimeFormat.forPattern("dd/MM/yyyy");
 	
 	/**
-	 * Trasforma la data specificata dal parametro in una istanza della classe GregorianCalendar
+	 * Trasforma la data specificata dal parametro in una istanza della classe DateTime
 	 * @param date La data, in formato gg/mm/aaaa o gg-mm-aaaa
-	 * @return Una istanza di GregorianCalendar che rappresenta la data specificata dal parametro date
+	 * @return Una istanza di DateTime che rappresenta la data specificata dal parametro date
 	 * @throws DateFormatException Se la data e' in un formato non riconosciuto o specifica una data non valida [ad esempio 30 febbraio]
 	 */
 	public DateTime translateStringDate(String date) throws DateFormatException {

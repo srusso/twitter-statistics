@@ -2,9 +2,7 @@ package com.ssof.datatypes;
 
 import org.joda.time.DateTime;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class TimePeriod {
 	private final long periodStart;
@@ -36,34 +34,6 @@ public class TimePeriod {
 	}
 	
 	/**
-	 * Domenica == 0
-	 * ..
-	 * ..
-	 * Sabato == 6
-	 * @return
-	 */
-	public int getStartDayOfWeek(){
-		Calendar c = new GregorianCalendar();
-		c.setTimeInMillis(periodStart);
-		
-		return c.get(Calendar.DAY_OF_WEEK) - 1;
-	}
-	
-	/**
-	 * Domenica == 0
-	 * ..
-	 * ..
-	 * Sabato == 6
-	 * @return
-	 */
-	public int getEndDayOfWeek(){
-		Calendar c = new GregorianCalendar();
-		c.setTimeInMillis(periodEnd);
-		
-		return c.get(Calendar.DAY_OF_WEEK) - 1;
-	}
-	
-	/**
 	 * Ritorna true se la data specificata e' contenuta in
 	 * questo TimePeriod.
 	 * @param date
@@ -79,8 +49,8 @@ public class TimePeriod {
 	 * @param date
 	 * @return
 	 */
-	public boolean contains(GregorianCalendar date){
-		long time = date.getTimeInMillis();
+	public boolean contains(DateTime date){
+		long time = date.getMillis();
 		return time >= periodStart && time <= periodEnd; 
 	}
 	
@@ -153,24 +123,22 @@ public class TimePeriod {
 	}
 	
 	public String toString(){
-		GregorianCalendar start = new GregorianCalendar();
-		GregorianCalendar end   = new GregorianCalendar();
-		start.setTimeInMillis(periodStart);
-		end.setTimeInMillis(periodEnd);
+		DateTime start = new DateTime(periodStart);
+		DateTime end   = new DateTime(periodEnd);
 		
 		String repr;
-		int x = start.get(GregorianCalendar.DAY_OF_MONTH);
+		int x = start.getDayOfMonth();
 		repr  = ((x<10)?("0"+x):(""+x)) + "/";
-		x = start.get(GregorianCalendar.MONTH) + 1;
+		x = start.getMonthOfYear();
 		repr += ((x<10)?("0"+x):(""+x)) + "/";
-		x = start.get(GregorianCalendar.YEAR);
+		x = start.getYear();
 		repr += ((x<10)?("0"+x):(""+x)) + " - ";
 		
-		x = end.get(GregorianCalendar.DAY_OF_MONTH);
+		x = end.getDayOfMonth();
 		repr += ((x<10)?("0"+x):(""+x)) + "/";
-		x = end.get(GregorianCalendar.MONTH) + 1;
+		x = end.getMonthOfYear();
 		repr += ((x<10)?("0"+x):(""+x)) + "/";
-		x = end.get(GregorianCalendar.YEAR);
+		x = end.getYear();
 		repr += (x<10)?("0"+x):(""+x);
 		
 		

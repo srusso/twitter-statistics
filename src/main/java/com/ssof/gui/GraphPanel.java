@@ -20,7 +20,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -199,17 +198,16 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
 		
 		//disegno la data vicino al puntatore del mouse
 		long mouseTime = timePeriodDay.getStart() + (mouseX - startTimex) * (timePeriodDayLengthInMillis) / (endTimex - startTimex);
-		GregorianCalendar mouseTimeCal = new GregorianCalendar();
-		mouseTimeCal.setTimeInMillis(mouseTime);
-		int hour = mouseTimeCal.get(GregorianCalendar.HOUR_OF_DAY);
-		int minute = mouseTimeCal.get(GregorianCalendar.MINUTE);
-		int second = mouseTimeCal.get(GregorianCalendar.SECOND);
+		DateTime mouseTimeCal = new DateTime(mouseTime);
+		int hour = mouseTimeCal.getHourOfDay();
+		int minute = mouseTimeCal.getMinuteOfHour();
+		int second = mouseTimeCal.getSecondOfMinute();
 		String dateToDraw = "" +
-				mouseTimeCal.get(GregorianCalendar.DAY_OF_MONTH)
+				mouseTimeCal.getDayOfMonth()
 				+ "/" +
-				(mouseTimeCal.get(GregorianCalendar.MONTH) + 1)
+				(mouseTimeCal.getMonthOfYear())
 				+ "/" + 
-				mouseTimeCal.get(GregorianCalendar.YEAR)
+				mouseTimeCal.getYear()
 				+ " ore " +
 				((hour < 10)?("0"+hour):(""+hour))
 				+ ":" +

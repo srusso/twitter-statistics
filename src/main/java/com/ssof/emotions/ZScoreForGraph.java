@@ -8,11 +8,9 @@ import com.ssof.utils.comparators.DateComparator;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -115,7 +113,7 @@ public class ZScoreForGraph {
 		}
 	}
 	
-	public double getDayValue(Calendar day, String attribute) throws NoSuchAttributeException, NoSuchDayException {
+	public double getDayValue(DateTime day, String attribute) throws NoSuchAttributeException, NoSuchDayException {
 		int a;
 		
 		for(a = 0 ; a < attributes.length ; a++){
@@ -129,11 +127,10 @@ public class ZScoreForGraph {
 		
 		SingleZScore found = null;
 		for(SingleZScore zs : zscores){
-			Calendar c = new GregorianCalendar();
-			c.setTimeInMillis(zs.timeInterval.getStart());
-			if(c.get(Calendar.DAY_OF_MONTH) == day.get(Calendar.DAY_OF_MONTH) &&
-				c.get(Calendar.MONTH) == day.get(Calendar.MONTH) &&
-				c.get(Calendar.YEAR) == day.get(Calendar.YEAR)){
+			DateTime c = new DateTime(zs.timeInterval.getStart());
+			if(c.getDayOfMonth() == day.getDayOfMonth() &&
+				c.getMonthOfYear() == day.getMonthOfYear() &&
+				c.getYear() == day.getYear()){
 				found = zs;
 				break;
 			}
@@ -186,23 +183,21 @@ public class ZScoreForGraph {
 	 * al metodo getDayMean() come parametro day.
 	 * @return
 	 */
-	public Set <Calendar> getValidDays(){
-		Set <Calendar> days = new TreeSet<>();
+	public Set <DateTime> getValidDays(){
+		Set <DateTime> days = new TreeSet<>();
 
 		for(SingleZScore zs : zscores){
-			Calendar c = new GregorianCalendar();
-			c.setTimeInMillis(zs.timeInterval.getStart());
-			days.add(c);
+			days.add(new DateTime(zs.timeInterval.getStart()));
 		}
 
 		return days;
 	}
 	
-	public Calendar getFirstDay(){
+	public DateTime getFirstDay(){
 		return Collections.min(getValidDays(), new DateComparator());
 	}
 	
-	public Calendar getLasttDay(){
+	public DateTime getLasttDay(){
 		return Collections.max(getValidDays(), new DateComparator());
 	}
 

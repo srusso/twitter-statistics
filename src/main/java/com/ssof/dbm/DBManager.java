@@ -1,5 +1,14 @@
 package com.ssof.dbm;
 
+import com.ssof.twitter.SingleTweet;
+import com.ssof.utils.StringUtils;
+import com.ssof.utils.TextAnalizer;
+import org.joda.time.DateTime;
+import twitter4j.GeoLocation;
+import twitter4j.Place;
+import twitter4j.Status;
+import twitter4j.User;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,16 +18,7 @@ import java.nio.BufferUnderflowException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
-
-import com.ssof.twitter.SingleTweet;
-import com.ssof.utils.StringUtils;
-import com.ssof.utils.TextAnalizer;
-import twitter4j.GeoLocation;
-import twitter4j.Place;
-import twitter4j.Status;
-import twitter4j.User;
 
 public class DBManager {
 	private String workingDirectory = System.getProperty("user.dir") + File.separator + "database";
@@ -34,10 +34,10 @@ public class DBManager {
 	 */
 	public boolean addTweets(List<Status> tweetBuf){
 		String filename = workingDirectory;
-		GregorianCalendar gc = new GregorianCalendar();
+		DateTime gc = new DateTime();
 		
 		if(filename.length() > 0)filename += File.separator;
-		filename += gc.get(GregorianCalendar.DAY_OF_MONTH) + "-" + (gc.get(GregorianCalendar.MONTH) + 1) + "-" + gc.get(GregorianCalendar.YEAR) + ".tws";
+		filename += gc.getDayOfMonth() + "-" + gc.getMonthOfYear() + "-" + gc.getYear() + ".tws";
 
 		try {
 			FileOutputStream fos = new FileOutputStream(filename, true); //true == append

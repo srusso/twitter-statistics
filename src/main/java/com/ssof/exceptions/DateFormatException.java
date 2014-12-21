@@ -8,7 +8,7 @@ public class DateFormatException extends Exception{
 	
 	/**
 	 * 
-	 * @param data La stringa che non si e' riusciti a trasformare in GregorianCalendar
+	 * @param data La stringa che non si e' riusciti a trasformare in DateTime
 	 * @param descrizione Descrizione ulteriore del problema, oppure null.
 	 */
 	public DateFormatException(String data, String descrizione){

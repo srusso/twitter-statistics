@@ -2,10 +2,10 @@ package com.ssof.tweetsearch;
 
 import com.ssof.twitter.SingleTweet;
 import com.ssof.utils.StringUtils;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class TweetSearch {
@@ -76,12 +76,12 @@ public class TweetSearch {
 		return sp.exactString == null || tweet.text.contains(sp.exactString);
 	}
 	
-	private boolean satAfterDate(GregorianCalendar tweetDate, SearchParameters sp) {
-		return sp.afterDate == null || tweetDate.after(sp.afterDate);
+	private boolean satAfterDate(DateTime tweetDate, SearchParameters sp) {
+		return sp.afterDate == null || tweetDate.isAfter(sp.afterDate);
 	}
 	
-	private boolean satBeforeDate(GregorianCalendar tweetDate, SearchParameters sp) {
-		return sp.beforeDate == null || tweetDate.before(sp.beforeDate);
+	private boolean satBeforeDate(DateTime tweetDate, SearchParameters sp) {
+		return sp.beforeDate == null || tweetDate.isBefore(sp.beforeDate);
 	}
 	
 	private boolean satAuthor(SingleTweet tweet, SearchParameters sp) {
@@ -106,8 +106,7 @@ public class TweetSearch {
 		String [] textwords = StringUtils.removeAccents(tweet.text).split(" "); //prendo il testo del tweet rimuovendo accenti, ad esempio "perch�" diventa "perche"
 		
 		//prendo la data del tweet
-		GregorianCalendar tweetDate = new GregorianCalendar();
-		tweetDate.setTimeInMillis(tweet.millisSinceEpoch);
+		DateTime tweetDate = new DateTime(tweet.millisSinceEpoch);
 
 		return  satOneOrMore(textwords, sp) && satAllWords(textwords, sp) && satExactString(tweet, sp)
 				&& satAfterDate(tweetDate, sp) && satBeforeDate(tweetDate, sp) && satAuthor(tweet, sp)

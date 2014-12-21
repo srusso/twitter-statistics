@@ -26,7 +26,6 @@ import com.ssof.utils.ArrayMath;
 import com.ssof.utils.DateUtils;
 import com.ssof.utils.TextAnalizer;
 import org.joda.time.DateTime;
-import twitter4j.TwitterException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -61,7 +60,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainWindow extends JFrame implements MouseListener, ActionListener, WindowListener {

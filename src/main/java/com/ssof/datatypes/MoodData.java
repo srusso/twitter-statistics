@@ -5,12 +5,10 @@ import com.ssof.exceptions.NoSuchAttributeException;
 import com.ssof.exceptions.NoSuchDayException;
 import com.ssof.twitter.SingleTweet;
 import com.ssof.utils.comparators.DateComparator;
+import org.joda.time.DateTime;
 
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +19,7 @@ import java.util.Set;
  * dell'andamento delle emozioni.
  * 
  * Per ogni giorno, contiene:
- * - Calendar rappresentante il giorno
+ * - DateTime rappresentante il giorno
  * - Media, per singolo tweet, di ogni attributo del lessico
  * @author Simone
  *
@@ -34,7 +32,7 @@ public class MoodData {
 	 */
 	private final String [] attributes;
 	
-	private final Map <Calendar, DayMoodData> dayData;
+	private final Map <DateTime, DayMoodData> dayData;
 	
 	private int evalued = 0;
 	private int not_evalued = 0;
@@ -42,47 +40,39 @@ public class MoodData {
 	public MoodData(List<SingleTweet> tweets, Dictionary dictionary) throws Exception{
 		this.dictionary = dictionary;
 		attributes      = dictionary.getAttributeArray();
-		dayData 		= new HashMap<Calendar, DayMoodData>();
+		dayData 		= new HashMap<>();
 		
 		long time1 = System.currentTimeMillis();
-		
-		Iterator <SingleTweet> iterator = tweets.iterator();
-		
-		while(iterator.hasNext()){
-			SingleTweet t = iterator.next();
-			Calendar d    = new GregorianCalendar();
-			d.setTimeInMillis(t.millisSinceEpoch);
-			d.set(Calendar.HOUR_OF_DAY, 0);
-			d.set(Calendar.MINUTE, 0);
-			d.set(Calendar.SECOND, 0);
-			d.set(Calendar.MILLISECOND, 0);
-			
+
+		for (SingleTweet t : tweets) {
+			DateTime d = new DateTime(t.millisSinceEpoch)
+				.withHourOfDay(0)
+				.withMinuteOfHour(0)
+				.withSecondOfMinute(0)
+				.withMillisOfDay(0);
+
 			DayMoodData dmd = dayData.get(d);
-			
-			double [] mood = dictionary.getTweetMood(t.text);
-			
-			if(mood!=null){
+
+			double[] mood = dictionary.getTweetMood(t.text);
+
+			if (mood != null) {
 				evalued++;
-				if(dmd == null){
+				if (dmd == null) {
 					dmd = new DayMoodData(dictionary);
 					dmd.updateTotal(mood);
-				
+
 					dayData.put(d, dmd);
-				}else {
+				} else {
 					dmd.updateTotal(mood);
 				}
 			} else {
 				not_evalued++;
 			}
-			
+
 		}
-		
-		Iterator <Calendar> i = dayData.keySet().iterator();
-		
-		while(i.hasNext()){
-			DayMoodData data = dayData.get(i.next());
-			
-			data.setMean();
+
+		for (DateTime date : dayData.keySet()) {
+			dayData.get(date).setMean();
 		}
 		
 		long time2 = System.currentTimeMillis();
@@ -100,7 +90,7 @@ public class MoodData {
 	 * @throws NoSuchDayException Se non ci sono dati per il giorno specificato
 	 * @throws NoSuchAttributeException Se l'attributo specificato non e' presente nei lessico
 	 */
-	public double getDayMean(Calendar day, String attribute) throws NoSuchAttributeException, NoSuchDayException{
+	public double getDayMean(DateTime day, String attribute) throws NoSuchAttributeException, NoSuchDayException{
 		int a;
 		
 		for(a = 0 ; a < attributes.length ; a++){
@@ -137,15 +127,15 @@ public class MoodData {
 	 * al metodo getDayMean() come parametro day.
 	 * @return
 	 */
-	public Set <Calendar> getValidDays(){
+	public Set<DateTime> getValidDays(){
 		return dayData.keySet();
 	}
 	
-	public Calendar getFirstDay(){
+	public DateTime getFirstDay(){
 		return Collections.min(dayData.keySet(), new DateComparator());
 	}
 	
-	public Calendar getLasttDay(){
+	public DateTime getLasttDay(){
 		return Collections.max(dayData.keySet(), new DateComparator());
 	}
 
