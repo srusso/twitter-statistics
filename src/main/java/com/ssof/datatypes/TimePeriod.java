@@ -1,5 +1,7 @@
 package com.ssof.datatypes;
 
+import org.joda.time.DateTime;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -20,12 +22,8 @@ public class TimePeriod {
 		numberOfHours = numberOfDays * 24;
 	}
 	
-	public TimePeriod(Calendar start, Calendar end){
-		this(start.getTimeInMillis(), end.getTimeInMillis());
-	}
-	
-	public TimePeriod(Date start, Date end){
-		this(start.getTime(), end.getTime());
+	public TimePeriod(DateTime start, DateTime end){
+		this(start.getMillis(), end.getMillis());
 	}
 	
 	public boolean equals(Object o){

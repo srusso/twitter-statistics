@@ -4,7 +4,9 @@ package com.ssof.gui;
 import com.ssof.datatypes.TimePeriod;
 import com.ssof.datatypes.WordTimelineTweets;
 import com.ssof.twitter.SingleTweet;
+import org.joda.time.DateTime;
 
+import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -19,10 +21,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.JPanel;
 
 /**
  * Grafico uso parole.
@@ -61,12 +60,12 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
 	/**
 	 * Giorno del primo tweet, appena scattata la mezzanotte.
 	 */
-	private final GregorianCalendar startTime;
+	private final DateTime startTime;
 	
 	/**
 	 * Giorno dell'ultimo tweet, appena prima che scatti la mezzanotte.
 	 */
-	private final GregorianCalendar endTime;
+	private final DateTime endTime;
 	
 	/**
 	 * Se disegnare o no il grafico con un dettaglio nell'ordine delle ore.
@@ -101,20 +100,16 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
 		
 		timePeriod = getTimePeriod();
 
-		startTime = new GregorianCalendar();
-		endTime = new GregorianCalendar();
-		startTime.setTimeInMillis(timePeriod.getStart());
-		endTime.setTimeInMillis(timePeriod.getEnd());
-		
-		startTime.set(GregorianCalendar.HOUR_OF_DAY, 0);
-		startTime.set(GregorianCalendar.MINUTE, 0);
-		startTime.set(GregorianCalendar.SECOND, 0);
-		startTime.set(GregorianCalendar.MILLISECOND, 0);
-		
-		endTime.set(GregorianCalendar.HOUR_OF_DAY, 23);
-		endTime.set(GregorianCalendar.MINUTE, 59);
-		endTime.set(GregorianCalendar.SECOND, 59);
-		endTime.set(GregorianCalendar.MILLISECOND, 999);
+		startTime = new DateTime(timePeriod.getStart())
+			.withHourOfDay(0)
+			.withMinuteOfHour(0)
+			.withSecondOfMinute(0)
+			.withMillisOfSecond(0);
+		endTime = new DateTime(timePeriod.getEnd())
+			.withHourOfDay(0)
+			.withMinuteOfHour(0)
+			.withSecondOfMinute(0)
+			.withMillisOfSecond(0);
 		
 		timePeriodDay = new TimePeriod(startTime, endTime);
 		
@@ -317,29 +312,29 @@ public class GraphPanel extends JPanel implements MouseListener, MouseMotionList
 	private TimePeriod getTimePeriod(){
 		long minStart = Long.MAX_VALUE;
 		long maxEnd   = 0;
-		
-		for(int i = 0 ; i < timelines.size() ; i++){
-			
-			WordTimelineTweets tl = timelines.get(i); //di ogni timeline...
-			
-			if(tl.tweets.size() == 0)
+
+		for (WordTimelineTweets tl : timelines) {
+			if (tl.tweets.size() == 0) {
 				continue;
-			
+			}
+
 			SingleTweet firstTweet = tl.getOldestTweet(); //...prendo il tweet piu vecchio
-			SingleTweet lastTweet  = tl.getNewestTweet(); //e il tweet piu recente
-			
-			if(firstTweet.millisSinceEpoch < minStart)
+			SingleTweet lastTweet = tl.getNewestTweet(); //e il tweet piu recente
+
+			if (firstTweet.millisSinceEpoch < minStart) {
 				minStart = firstTweet.millisSinceEpoch;
-				
-			if(lastTweet.millisSinceEpoch > maxEnd)
+			}
+
+			if (lastTweet.millisSinceEpoch > maxEnd) {
 				maxEnd = lastTweet.millisSinceEpoch;
-			
+			}
 		}
 		
-		if(minStart == Long.MAX_VALUE || maxEnd == 0) //nessun tweet!
+		if(minStart == Long.MAX_VALUE || maxEnd == 0) { //nessun tweet!
 			return null;
-		
-		else return new TimePeriod(minStart, maxEnd);
+		} else {
+			return new TimePeriod(minStart, maxEnd);
+		}
 	}
 	
 	public void mouseClicked(MouseEvent e) {

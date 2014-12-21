@@ -25,6 +25,7 @@ import com.ssof.twitter.TweetManager;
 import com.ssof.utils.ArrayMath;
 import com.ssof.utils.DateUtils;
 import com.ssof.utils.TextAnalizer;
+import org.joda.time.DateTime;
 import twitter4j.TwitterException;
 
 import javax.swing.BorderFactory;
@@ -583,18 +584,16 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		String fine = JOptionPane.showInputDialog(this, "Inserire data fine", "Input richiesto", JOptionPane.PLAIN_MESSAGE);
 		
 		try {
-			GregorianCalendar dataInizio = this.dateUtils.translateStringDate(inizio);
-			GregorianCalendar dataFine = this.dateUtils.translateStringDate(fine);
-			
-			dataInizio.set(GregorianCalendar.HOUR_OF_DAY, 0);
-			dataInizio.set(GregorianCalendar.MINUTE, 0);
-			dataInizio.set(GregorianCalendar.SECOND, 0);
-			dataInizio.set(GregorianCalendar.MILLISECOND, 0);
-			
-			dataFine.set(GregorianCalendar.HOUR_OF_DAY, 23);
-			dataFine.set(GregorianCalendar.MINUTE, 59);
-			dataFine.set(GregorianCalendar.SECOND, 59);
-			dataFine.set(GregorianCalendar.MILLISECOND, 999);
+			DateTime dataInizio = this.dateUtils.translateStringDate(inizio)
+				.withHourOfDay(0)
+				.withMinuteOfHour(0)
+				.withSecondOfMinute(0)
+				.withMillisOfSecond(0);
+			DateTime dataFine = this.dateUtils.translateStringDate(fine)
+				.withHourOfDay(0)
+				.withMinuteOfHour(0)
+				.withSecondOfMinute(0)
+				.withMillisOfSecond(0);
 			
 			TimePeriod tp = new TimePeriod(dataInizio, dataFine);
 			

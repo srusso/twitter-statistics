@@ -2,11 +2,10 @@ package com.ssof.emotions;
 
 import com.ssof.datatypes.TimePeriod;
 import com.ssof.twitter.SingleTweet;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -99,23 +98,17 @@ public class MultipleZScore {
 	}
 
 	private TimePeriod getDayTimePeriod(long millisSinceEpoch){
-		Calendar startTime, endTime;
-		
-		startTime = new GregorianCalendar();
-		endTime   = new GregorianCalendar();
-	
-		startTime.setTimeInMillis(millisSinceEpoch);
-		endTime.setTimeInMillis(millisSinceEpoch);
-		
-		startTime.set(GregorianCalendar.HOUR_OF_DAY, 0);
-		startTime.set(GregorianCalendar.MINUTE, 0);
-		startTime.set(GregorianCalendar.SECOND, 0);
-		startTime.set(GregorianCalendar.MILLISECOND, 0);
-		
-		endTime.set(GregorianCalendar.HOUR_OF_DAY, 23);
-		endTime.set(GregorianCalendar.MINUTE, 59);
-		endTime.set(GregorianCalendar.SECOND, 59);
-		endTime.set(GregorianCalendar.MILLISECOND, 999);
+		DateTime startTime = new DateTime(millisSinceEpoch)
+			.withHourOfDay(0)
+			.withMinuteOfHour(0)
+			.withSecondOfMinute(0)
+			.withMillisOfSecond(0);
+
+		DateTime endTime = new DateTime(millisSinceEpoch)
+			.withHourOfDay(23)
+			.withMinuteOfHour(59)
+			.withSecondOfMinute(59)
+			.withMillisOfSecond(999);
 		
 		return new TimePeriod(startTime, endTime);	
 	}

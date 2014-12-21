@@ -3,9 +3,9 @@ package com.ssof.tweetsearch;
 import com.ssof.exceptions.DateFormatException;
 import com.ssof.utils.DateUtils;
 import com.ssof.utils.StringUtils;
+import org.joda.time.DateTime;
 
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.TreeSet;
 
 /**
@@ -34,12 +34,12 @@ public class SearchParameters {
 	/**
 	 * Parametro soddisfatto se il tweet e' stato creato dopo la data specificata.
 	 */
-	GregorianCalendar afterDate = null;
+	DateTime afterDate = null;
 	
 	/**
 	 * Parametro soddisfatto se il tweet e' stato creato prima della data specificata.
 	 */
-	GregorianCalendar beforeDate = null;
+	DateTime beforeDate = null;
 	
 	/**
 	 * Parametro soddisfatto se l'autore del tweet e' quello specificato da questa stringa. [case insensitive]
