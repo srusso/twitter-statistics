@@ -94,14 +94,16 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 	
 	private final TweetManager tweetManager;
 	private final DBManager dbManager;
-	
+	private DateUtils dateUtils;
+
 	private List<SingleTweet> tweets = null;
 	
 	private Dictionary dictionary = null;
 	
-	public MainWindow(TweetManager tweetManager, DBManager dbManager){
+	public MainWindow(TweetManager tweetManager, DBManager dbManager, DateUtils dateUtils){
 		this.tweetManager = tweetManager;
 		this.dbManager = dbManager;
+		this.dateUtils = dateUtils;
 		DateFormat format=DateFormat.getDateInstance();
 		COMPILATION_TIME = format.format(new Date());
 		
@@ -581,8 +583,8 @@ public class MainWindow extends JFrame implements MouseListener, ActionListener,
 		String fine = JOptionPane.showInputDialog(this, "Inserire data fine", "Input richiesto", JOptionPane.PLAIN_MESSAGE);
 		
 		try {
-			GregorianCalendar dataInizio = DateUtils.translateStringDate(inizio);
-			GregorianCalendar dataFine = DateUtils.translateStringDate(fine);
+			GregorianCalendar dataInizio = this.dateUtils.translateStringDate(inizio);
+			GregorianCalendar dataFine = this.dateUtils.translateStringDate(fine);
 			
 			dataInizio.set(GregorianCalendar.HOUR_OF_DAY, 0);
 			dataInizio.set(GregorianCalendar.MINUTE, 0);

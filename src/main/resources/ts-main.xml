@@ -4,9 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <import resource="ts-util.xml"/>
+    
     <bean id="mainWindow" class="com.ssof.gui.MainWindow">
         <constructor-arg index="0" ref="tweetManager"/>
         <constructor-arg index="1" ref="DBManager"/>
+        <constructor-arg index="2" ref="dateUtils"/>
     </bean>
 
     <bean id="tweetManager" class="com.ssof.twitter.TweetManager">

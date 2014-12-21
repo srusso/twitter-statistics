@@ -11,7 +11,7 @@ public class DateUtils {
 	 * @return Una istanza di GregorianCalendar che rappresenta la data specificata dal parametro date
 	 * @throws DateFormatException Se la data e' in un formato non riconosciuto o specifica una data non valida [ad esempio 30 febbraio]
 	 */
-	public static GregorianCalendar translateStringDate(String date) throws DateFormatException{
+	public GregorianCalendar translateStringDate(String date) throws DateFormatException{
 		GregorianCalendar control;
 		int day, month, year, maxDay;
 		final String div;

@@ -14,6 +14,8 @@ import java.util.TreeSet;
  * Un tweet soddisfa i parametri specificati in questa classe solo se li soddisfa tutti.
  */
 public class SearchParameters {
+	private final DateUtils dateUtils;
+	
 	/**
 	 * Parametro soddisfatto se il tweet contiene almeno una delle parole contenute in questa lista.
 	 */
@@ -59,7 +61,7 @@ public class SearchParameters {
 	 * Crea dei parametri di ricerca vuoti, soddisfatti quindi da ogni tweet.
 	 */
 	public SearchParameters(){
-		
+		this.dateUtils = new DateUtils();
 	}
 	
 	/**
@@ -83,9 +85,11 @@ public class SearchParameters {
 	 * @throws DateFormatException 
 	 */
 	public SearchParameters(String oneormore, String all, String exact, String dopoData, String primaData, String autore, String localita, String sorgente) throws DateFormatException {
+		this.dateUtils = new DateUtils();
+		
 		if(oneormore != null && oneormore.length() != 0){
 			String [] words = oneormore.split(" ");
-			oneOrMoreWords = new TreeSet<String>();
+			oneOrMoreWords = new TreeSet<>();
 			for(String word : words){
 				oneOrMoreWords.add(StringUtils.removeAccents(word));
 			}
@@ -93,7 +97,7 @@ public class SearchParameters {
 		
 		if(all != null && all.length() != 0){
 			String [] words = all.split(" ");
-			allWords = new TreeSet<String>();
+			allWords = new TreeSet<>();
 			for(String word : words){
 				allWords.add(StringUtils.removeAccents(word));
 			}
@@ -104,11 +108,11 @@ public class SearchParameters {
 		}
 		
 		if(dopoData != null && dopoData.length() != 0){
-			this.afterDate = DateUtils.translateStringDate(dopoData);
+			this.afterDate = this.dateUtils.translateStringDate(dopoData);
 		}
 		
 		if(primaData != null && primaData.length() != 0){
-			this.beforeDate = DateUtils.translateStringDate(primaData);
+			this.beforeDate = this.dateUtils.translateStringDate(primaData);
 		}
 		
 		if(autore != null && autore.length() != 0){
